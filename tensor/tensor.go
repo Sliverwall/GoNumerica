@@ -96,3 +96,19 @@ func (t *Tensor) String() string {
 		return "Tensor of unsupported dimension"
 	}
 }
+
+// Transpose transposes a Tensors. Works for both 1D and 2D
+func (t *Tensor) Transpose() error {
+
+	transposedData := make([]float64, len(t.data))
+	rows, cols := t.shape[0], t.shape[1]
+
+	for i := 0; i < rows; i++ {
+		for j := 0; j < cols; j++ {
+			transposedData[j*rows+i] = t.data[i*cols+j]
+		}
+	}
+	t.shape = []int{cols, rows}
+	t.data = transposedData
+	return nil
+}

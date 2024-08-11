@@ -114,3 +114,50 @@ func Test_4() {
 	log.Println("1x5 Zeros vector", zeroX)
 
 }
+
+func Test_5() {
+	// Test Tensor methods
+	log.Println("Test_5 for tensor methods")
+
+	// Check same shape
+	A, _ := Zeros([]int{3, 3})
+	B, _ := Zeros([]int{3, 3})
+	C, _ := Zeros([]int{2, 5})
+
+	log.Println("A:", A, "\nB:", B, "\nC:", C)
+	log.Println("Testing A.sameShape(*Tensor)")
+	log.Println("A same shape as B:", A.sameShape(B))
+	log.Println("A same shape as C", A.sameShape(C))
+
+	log.Println("Testing A.ReShape([]int{1,9})")
+
+	newDim := []int{1, 9}
+	// Try to catch error. Will fail if all elements can be redistruted to new form.
+	err := A.Reshape(newDim)
+	if err != nil {
+		log.Println(err)
+	} else {
+		A.Reshape(newDim)
+	}
+	log.Println("New A:", A)
+}
+
+func Test_6() {
+	// Test Tensor transpose
+
+	// Matrix transpose
+	A, _ := Zeros([]int{2, 5})
+
+	log.Println("A", A)
+
+	A.Transpose()
+	log.Println("A tranposed", A)
+
+	// Vector transpose
+	X, _ := Zeros([]int{1, 5})
+
+	log.Println("X", X)
+	X.Transpose()
+	log.Println("X tranposed", X)
+
+}
