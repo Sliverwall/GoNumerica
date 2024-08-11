@@ -80,7 +80,7 @@ func (t *Tensor) String() string {
 		return fmt.Sprintf("Vector: %v", t.data)
 	case 2:
 		rows, cols := t.shape[0], t.shape[1]
-		result := "Matrix:\n"
+		result := "\n"
 		for i := 0; i < rows; i++ {
 			result += fmt.Sprintf("%v\n", t.data[i*cols:(i+1)*cols])
 		}
