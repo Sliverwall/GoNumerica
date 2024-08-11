@@ -9,5 +9,5 @@ func main() {
 	log.Println("Hello GoNumerica")
 
 	// Print examples
-	tensor.Example2()
+	tensor.Test_4()
 }

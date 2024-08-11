@@ -76,13 +76,20 @@ func (t *Tensor) Reshape(newShape []int) error {
 // String returns a string representation of the Tensor.
 func (t *Tensor) String() string {
 	switch len(t.shape) {
+	// String for vector form
 	case 1:
 		return fmt.Sprintf("Vector: %v", t.data)
+	// String for Matrix form.
 	case 2:
 		rows, cols := t.shape[0], t.shape[1]
 		result := "\n"
 		for i := 0; i < rows; i++ {
-			result += fmt.Sprintf("%v\n", t.data[i*cols:(i+1)*cols])
+			// Avoid extra space at final row
+			if i+1 == rows {
+				result += fmt.Sprintf("%v", t.data[i*cols:(i+1)*cols])
+			} else {
+				result += fmt.Sprintf("%v\n", t.data[i*cols:(i+1)*cols])
+			}
 		}
 		return result
 	default:

@@ -27,3 +27,21 @@ func Identity(tensor *Tensor) (*Tensor, error) {
 		return nil, errors.New("invalid shape for identity tensor")
 	}
 }
+
+// Zeros creates a tensor of zeros based on the provided shape.
+func Zeros(shape []int) (*Tensor, error) {
+	if len(shape) == 0 {
+		return nil, errors.New("shape cannot be empty")
+	}
+
+	size := 1
+	for _, dim := range shape {
+		if dim <= 0 {
+			return nil, errors.New("shape dimensions must be positive integers")
+		}
+		size *= dim
+	}
+
+	zeroData := make([]float64, size)
+	return &Tensor{shape: shape, data: zeroData}, nil
+}
