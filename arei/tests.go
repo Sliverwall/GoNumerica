@@ -125,11 +125,11 @@ func Test_5() {
 	C, _ := Zeros([]int{2, 5})
 
 	log.Println("A:", A, "\nB:", B, "\nC:", C)
-	log.Println("Testing A.sameShape(*Arei)")
-	log.Println("A same shape as B:", A.sameShape(B))
-	log.Println("A same shape as C", A.sameShape(C))
+	log.Println("Testing A.SameShape(*Arei)")
+	log.Println("A same shape as B:", A.SameShape(B))
+	log.Println("A same shape as C", A.SameShape(C))
 
-	log.Println("Testing A.ReShape([]int{1,9})")
+	log.Println("Testing A.Reshape([]int{1,9})")
 
 	newDim := []int{1, 9}
 	// Try to catch error. Will fail if all elements can be redistruted to new form.
@@ -160,4 +160,58 @@ func Test_6() {
 	X.Transpose()
 	log.Println("X tranposed", X)
 
+}
+
+func Test_7() {
+	// Test few element-wise functions
+	log.Println("Test_7 test a few element-wise functions")
+	A, _ := NewArei([][]float64{
+		{1, 2, 3},
+		{2, 2, 2},
+		{0, 2, -1},
+	})
+
+	log.Println("Matrix A:", A)
+
+	// Apply Exp function
+	A_E, _ := Exp(A)
+
+	log.Println("Matrix A with Exp applied", A_E)
+
+	// Test Max on A. Result should be 3
+	maxA, _ := Max(A)
+
+	log.Println("Max element in Matrix A:", maxA)
+
+	// Test Min on A. Result should b -1
+	minA, _ := Min(A)
+
+	log.Println("Min element in Matrix A:", minA)
+}
+
+func Test_8() {
+	// Test flatten and transpose and count methods
+	log.Println("Test_8 test flatten, transpose, and count methods")
+
+	// Create matrix
+	A, _ := Zeros([]int{3, 6})
+	log.Println(A)
+	// Test Flatten on A
+	A.Flatten()
+	log.Println(A)
+
+	// Test Flatten on vector
+
+	X, _ := NewArei([]float64{1, 2, 3, 4})
+	// confirm error check prevents crash
+	X.Flatten()
+	log.Println(X)
+
+	// Test transpose on vector
+	X.Transpose()
+	log.Println(X)
+	log.Println(X.shape, X.shape[0], X.shape[1])
+
+	// Test count on matrix and vector
+	log.Println("A count:", A.Count(), " X count:", X.Count())
 }

@@ -9,5 +9,5 @@ func main() {
 	log.Println("Hello GoNumerica")
 
 	// Print examples
-	arei.Test_6()
+	arei.Test_8()
 }
