@@ -3,6 +3,7 @@ package arei
 import (
 	"errors"
 	"fmt"
+	"math"
 )
 
 // Arei represents a multi-dimensional array, including vectors and matrices, for float64 data.
@@ -48,7 +49,7 @@ func (a *Arei) String() string {
 	switch len(a.shape) {
 	// String for vector form
 	case 1:
-		return fmt.Sprintf("Vector: %v", a.data)
+		return fmt.Sprintf("%v", a.data)
 	// String for Matrix form.
 	case 2:
 		rows, cols := a.shape[0], a.shape[1]
@@ -97,7 +98,7 @@ func (a *Arei) Reshape(newShape []int) error {
 	return nil
 }
 
-// Transpose transposes a Areis. Works for both 1D and 2D
+// Transpose takes each row in the Arei and repositions it as a column
 func (a *Arei) Transpose() {
 
 	transposedData := make([]float64, len(a.data))
@@ -140,11 +141,29 @@ func (a *Arei) Flatten() error {
 
 // Count returns the number of elements in the arei
 func (a *Arei) Count() int {
-	var result int
-	if len(a.shape) == 1 {
-		result = a.shape[0]
-	} else {
-		result = a.shape[0] * a.shape[1]
+	return len(a.data)
+}
+
+// Max finds the max element in an Arei
+func (a *Arei) Max() (float64, error) {
+
+	var result float64 = math.Inf(-1)
+	for i := range a.data {
+		if a.data[i] > result {
+			result = a.data[i]
+		}
 	}
-	return result
+	return result, nil
+}
+
+// Min finds the min element in an Arei
+func (a *Arei) Min() (float64, error) {
+
+	var result float64 = math.Inf(1)
+	for i := range a.data {
+		if a.data[i] < result {
+			result = a.data[i]
+		}
+	}
+	return result, nil
 }

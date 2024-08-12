@@ -179,12 +179,12 @@ func Test_7() {
 	log.Println("Matrix A with Exp applied", A_E)
 
 	// Test Max on A. Result should be 3
-	maxA, _ := Max(A)
+	maxA, _ := A.Max()
 
 	log.Println("Max element in Matrix A:", maxA)
 
 	// Test Min on A. Result should b -1
-	minA, _ := Min(A)
+	minA, _ := A.Min()
 
 	log.Println("Min element in Matrix A:", minA)
 }
@@ -214,4 +214,77 @@ func Test_8() {
 
 	// Test count on matrix and vector
 	log.Println("A count:", A.Count(), " X count:", X.Count())
+}
+
+func Test_9() {
+	// Test element-wise functions
+
+	log.Println("Test_9 to test Multi, Div, Elemetwise, and Sign")
+
+	A, _ := NewArei([][]float64{
+		{1, 2, 3, 4},
+		{4, 3, 2, 3},
+	})
+
+	B, _ := NewArei([][]float64{
+		{1, 2, 3, 4},
+		{4, 3, 2, 3},
+	})
+
+	log.Println("A:", A, "B:", B)
+
+	// Test multi and div
+	AB_multi, _ := Multi(A, B)
+	AB_div, _ := Div(A, B)
+
+	log.Println("AB_multi:", AB_multi)
+	log.Println("AB_div:", AB_div)
+
+	A_minus, _ := Sign(A)
+	log.Println("-A", A_minus)
+
+	// Assign function to variable to use in elementwise
+	divide := func(a, b float64) float64 {
+		return a / b
+	}
+	AB_elementwise, _ := ElementWise(A, B, divide)
+
+	log.Println("AB_elementwise(divide):", AB_elementwise)
+}
+
+func Test_10() {
+	// Test Search functions
+
+	// Test matrix
+	A, _ := NewArei([][]float64{
+		{1, 2, 3},
+		{1, 3, 2},
+		{3, 2, 1},
+	})
+
+	log.Println("matrix A:", A)
+	maxIndexes, _ := WhereMax(A)
+
+	// Should be {2,1,0}
+	log.Println("Max indices of A along each row:", maxIndexes)
+
+	// Now a vector
+	X, _ := NewArei([]float64{1, 2, 3})
+
+	log.Println("vecotr X:", X)
+
+	maxIndexesVector, _ := WhereMax(X)
+	log.Println("Max index of X", maxIndexesVector)
+
+	// conditional where true if element >= 3
+	cond := func(element float64) bool {
+		if element >= 4.0 {
+			return true
+		} else {
+			return false
+		}
+	}
+	threeIndexes, _ := Where(A, cond)
+	log.Println(threeIndexes)
+
 }

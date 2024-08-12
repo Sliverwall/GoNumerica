@@ -2,8 +2,24 @@ package arei
 
 import (
 	"errors"
-	"math"
 )
+
+// ElementWise applies a given function element-wise to two Areis.
+func ElementWise(a, b *Arei, operation func(float64, float64) float64) (*Arei, error) {
+	if !a.SameShape(b) {
+		return nil, errors.New("areis must have the same shape for element-wise operation")
+	}
+
+	resultData := make([]float64, len(a.data))
+	for i := range a.data {
+		resultData[i] = operation(a.data[i], b.data[i])
+	}
+
+	return &Arei{
+		shape: a.shape,
+		data:  resultData,
+	}, nil
+}
 
 // Sum performs element-wise addition of two Areis.
 func Sum(a, b *Arei) (*Arei, error) {
@@ -39,13 +55,15 @@ func Sub(a, b *Arei) (*Arei, error) {
 	}, nil
 }
 
-// Exp takes each element in an Arei with base euler's number
-func Exp(a *Arei) (*Arei, error) {
+// Multi performs element-wise multiplication of two Areis.
+func Multi(a, b *Arei) (*Arei, error) {
+	if !a.SameShape(b) {
+		return nil, errors.New("areis must have the same shape to add")
+	}
 
 	resultData := make([]float64, len(a.data))
-
 	for i := range a.data {
-		resultData[i] = math.Exp(a.data[i])
+		resultData[i] = a.data[i] * b.data[i]
 	}
 
 	return &Arei{
@@ -54,26 +72,22 @@ func Exp(a *Arei) (*Arei, error) {
 	}, nil
 }
 
-// Max finds the max element in an Arei
-func Max(a *Arei) (float64, error) {
-
-	var result float64 = math.Inf(-1)
-	for i := range a.data {
-		if a.data[i] > result {
-			result = a.data[i]
-		}
+// Div performs element-wise Division of two Areis.
+func Div(a, b *Arei) (*Arei, error) {
+	if !a.SameShape(b) {
+		return nil, errors.New("areis must have the same shape to add")
 	}
-	return result, nil
-}
 
-// Min finds the min element in an Arei
-func Min(a *Arei) (float64, error) {
-
-	var result float64 = math.Inf(1)
+	resultData := make([]float64, len(a.data))
 	for i := range a.data {
-		if a.data[i] < result {
-			result = a.data[i]
+		if b.data[i] == 0 {
+			return nil, errors.New("cannot divide by 0")
 		}
+		resultData[i] = a.data[i] / b.data[i]
 	}
-	return result, nil
+
+	return &Arei{
+		shape: a.shape,
+		data:  resultData,
+	}, nil
 }

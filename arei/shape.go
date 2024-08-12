@@ -18,7 +18,7 @@ func Identity(a *Arei) (*Arei, error) {
 		if a.shape[0] != a.shape[1] {
 			return nil, errors.New("cannot create an identity matrix for a non-square matrix")
 		}
-		identityData := make([]float64, a.shape[0]*a.shape[1])
+		identityData := make([]float64, len(a.data))
 		for i := 0; i < a.shape[0]; i++ {
 			identityData[i*a.shape[0]+i] = 1.0
 		}
