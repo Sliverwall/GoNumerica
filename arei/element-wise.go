@@ -24,7 +24,7 @@ func ElementWise(a, b *Arei, operation func(float64, float64) float64) (*Arei, e
 // Sum performs element-wise addition of two Areis.
 func Sum(a, b *Arei) (*Arei, error) {
 	if !a.SameShape(b) {
-		return nil, errors.New("areis must have the same shape to add")
+		return nil, errors.New("areis must have the same shape for element-wise operation")
 	}
 
 	resultData := make([]float64, len(a.data))
@@ -41,7 +41,7 @@ func Sum(a, b *Arei) (*Arei, error) {
 // Sub performs element-wise subtraction of two Areis.
 func Sub(a, b *Arei) (*Arei, error) {
 	if !a.SameShape(b) {
-		return nil, errors.New("areis must have the same shape to add")
+		return nil, errors.New("areis must have the same shape for element-wise operation")
 	}
 
 	resultData := make([]float64, len(a.data))
@@ -58,7 +58,7 @@ func Sub(a, b *Arei) (*Arei, error) {
 // Multi performs element-wise multiplication of two Areis.
 func Multi(a, b *Arei) (*Arei, error) {
 	if !a.SameShape(b) {
-		return nil, errors.New("areis must have the same shape to add")
+		return nil, errors.New("areis must have the same shape for element-wise operation")
 	}
 
 	resultData := make([]float64, len(a.data))
@@ -75,7 +75,7 @@ func Multi(a, b *Arei) (*Arei, error) {
 // Div performs element-wise Division of two Areis.
 func Div(a, b *Arei) (*Arei, error) {
 	if !a.SameShape(b) {
-		return nil, errors.New("areis must have the same shape to add")
+		return nil, errors.New("areis must have the same shape for element-wise operation")
 	}
 
 	resultData := make([]float64, len(a.data))

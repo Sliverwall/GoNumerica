@@ -193,6 +193,9 @@ func Test_8() {
 	// Test flatten and transpose and count methods
 	log.Println("Test_8 test flatten, transpose, and count methods")
 
+	// Create Matrix with Ns
+	N, _ := Ns([]int{3, 6}, 10)
+	log.Println(N)
 	// Create matrix
 	A, _ := Zeros([]int{3, 6})
 	log.Println(A)
@@ -299,8 +302,21 @@ func Test_10() {
 	// Test Index method
 	value, _ := A.Index(0, 2)
 	log.Println("A.Index(0,2) is (row=0,col=2) == A[0][2]:", value)
+	// Test set index
+	A.SetIndex(10.0, 0, 2)
+	value, _ = A.Index(0, 2)
+	log.Println("A.Index(0,2) after A.SetIndex(10.0,0,2):", value)
 
+	// Test vector indexing
 	valueX, _ := X.Index(2)
 
 	log.Println("X.Index(2) for just column in 1D arei:", valueX)
+
+	// Test vector set index
+
+	X.SetIndex(10.0, 2)
+	valueX, _ = X.Index(2)
+
+	log.Println("X.Index(2) after X.SetIndex(10.0,2):", valueX)
+
 }

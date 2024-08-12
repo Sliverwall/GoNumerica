@@ -4,6 +4,41 @@ import "errors"
 
 // Functions to create special kind of matrixes
 
+// Ns creates a Arei of n value based on the provided shape. Defaults to 0 if no value given
+func Ns(shape []int, n ...float64) (*Arei, error) {
+
+	// Default n value to 0
+	nValue := 0.0
+
+	// If n value provided, set it to nValue
+	if len(n) > 0 {
+		nValue = n[0]
+	}
+
+	if len(shape) == 0 {
+		return nil, errors.New("shape cannot be empty")
+	}
+
+	size := 1
+	for _, dim := range shape {
+		if dim <= 0 {
+			return nil, errors.New("shape dimensions must be positive integers")
+		}
+		size *= dim
+	}
+
+	// Create zeros data place holder
+	data := make([]float64, size)
+
+	if nValue != 0.0 {
+		for i := range data {
+			data[i] = nValue
+		}
+	}
+
+	return &Arei{shape: shape, data: data}, nil
+}
+
 // Identity creates an identity Arei with the same shape as the given Arei
 func Identity(a *Arei) (*Arei, error) {
 	switch len(a.shape) {
