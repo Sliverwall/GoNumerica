@@ -69,6 +69,30 @@ func (a *Arei) String() string {
 	}
 }
 
+// Frame prints an arei in matrix form
+func (a *Arei) Frame() {
+	switch len(a.shape) {
+	// String for vector form
+	case 1:
+		fmt.Printf("%v", a.data)
+	// String for Matrix form.
+	case 2:
+		rows, cols := a.shape[0], a.shape[1]
+		result := ""
+		for i := 0; i < rows; i++ {
+			// Avoid extra space at final row
+			if i+1 == rows {
+				result += fmt.Sprintf("%v", a.data[i*cols:(i+1)*cols])
+			} else {
+				result += fmt.Sprintf("%v\n", a.data[i*cols:(i+1)*cols])
+			}
+		}
+		fmt.Println(result)
+	default:
+		fmt.Println("Arei of unsupported dimension")
+	}
+}
+
 // SameShape checks if two Areis have the same shape.
 func (a *Arei) SameShape(other *Arei) bool {
 	if len(a.shape) != len(other.shape) {

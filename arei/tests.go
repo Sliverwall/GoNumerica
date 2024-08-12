@@ -320,3 +320,20 @@ func Test_10() {
 	log.Println("X.Index(2) after X.SetIndex(10.0,2):", valueX)
 
 }
+
+func Test_11() {
+	// Test frame print format
+
+	log.Println("Test Arei's Frame() method for printing Areis")
+	A, _ := Ns([]int{2, 4}, 4.0)
+	log.Println("Print A regular:", A)
+
+	log.Println("Print with A.Frame()")
+	A.Frame()
+
+	X, _ := Ns([]int{1, 4}, 4.0)
+	log.Println("Print X regular:", X)
+
+	log.Println("Print with X.Frame()")
+	X.Frame()
+}
