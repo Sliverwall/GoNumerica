@@ -6,44 +6,44 @@ import "math"
 
 // Transform takes an Arei and a given transformation function and applies to each element
 func Transform(a *Arei, transformation func(float64) float64) (*Arei, error) {
-	resultData := make([]float64, len(a.data))
+	resultData := make([]float64, len(a.Data))
 
-	for i := range a.data {
-		resultData[i] = transformation(a.data[i])
+	for i := range a.Data {
+		resultData[i] = transformation(a.Data[i])
 	}
 
 	return &Arei{
-		shape: a.shape,
-		data:  resultData,
+		Shape: a.Shape,
+		Data:  resultData,
 	}, nil
 }
 
 // Exp takes each element in an Arei with base euler's number
 func Exp(a *Arei) (*Arei, error) {
 
-	resultData := make([]float64, len(a.data))
+	resultData := make([]float64, len(a.Data))
 
-	for i := range a.data {
-		resultData[i] = math.Exp(a.data[i])
+	for i := range a.Data {
+		resultData[i] = math.Exp(a.Data[i])
 	}
 
 	return &Arei{
-		shape: a.shape,
-		data:  resultData,
+		Shape: a.Shape,
+		Data:  resultData,
 	}, nil
 }
 
 // Sign creates a new arei with flipped signs on each element
 func Sign(a *Arei) (*Arei, error) {
 
-	resultData := make([]float64, len(a.data))
+	resultData := make([]float64, len(a.Data))
 
-	for i := range a.data {
-		resultData[i] = a.data[i] * -1
+	for i := range a.Data {
+		resultData[i] = a.Data[i] * -1
 	}
 
 	return &Arei{
-		shape: a.shape,
-		data:  resultData,
+		Shape: a.Shape,
+		Data:  resultData,
 	}, nil
 }

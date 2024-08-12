@@ -119,15 +119,15 @@ func Test_5() {
 	// Test Arei methods
 	log.Println("Test_5 for Arei methods")
 
-	// Check same shape
+	// Check same Shape
 	A, _ := Zeros([]int{3, 3})
 	B, _ := Zeros([]int{3, 3})
 	C, _ := Zeros([]int{2, 5})
 
 	log.Println("A:", A, "\nB:", B, "\nC:", C)
 	log.Println("Testing A.SameShape(*Arei)")
-	log.Println("A same shape as B:", A.SameShape(B))
-	log.Println("A same shape as C", A.SameShape(C))
+	log.Println("A same Shape as B:", A.SameShape(B))
+	log.Println("A same Shape as C", A.SameShape(C))
 
 	log.Println("Testing A.Reshape([]int{1,9})")
 
@@ -213,7 +213,7 @@ func Test_8() {
 	// Test transpose on vector
 	X.Transpose()
 	log.Println(X)
-	log.Println(X.shape, X.shape[0], X.shape[1])
+	log.Println(X.Shape, X.Shape[0], X.Shape[1])
 
 	// Test count on matrix and vector
 	log.Println("A count:", A.Count(), " X count:", X.Count())
