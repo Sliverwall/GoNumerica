@@ -47,21 +47,22 @@ func NewArei(data interface{}) (*Arei, error) {
 // String returns a string representation of the Arei.
 func (a *Arei) String() string {
 	switch len(a.shape) {
-	// String for vector form
+	// String representation for a vector (1D array).
 	case 1:
 		return fmt.Sprintf("%v", a.data)
-	// String for Matrix form.
+	// String representation for a matrix (2D array).
 	case 2:
 		rows, cols := a.shape[0], a.shape[1]
-		result := "\n"
+		result := "["
 		for i := 0; i < rows; i++ {
-			// Avoid extra space at final row
-			if i+1 == rows {
-				result += fmt.Sprintf("%v", a.data[i*cols:(i+1)*cols])
-			} else {
-				result += fmt.Sprintf("%v\n", a.data[i*cols:(i+1)*cols])
+			// Slice the data to get the current row, and format it.
+			row := a.data[i*cols : (i+1)*cols]
+			result += fmt.Sprintf("%v", row)
+			if i < rows-1 {
+				result += "," // Add a comma and newline between rows.
 			}
 		}
+		result += "]"
 		return result
 	default:
 		return "Arei of unsupported dimension"

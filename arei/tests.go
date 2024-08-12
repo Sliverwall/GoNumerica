@@ -257,7 +257,7 @@ func Test_10() {
 
 	// Test matrix
 	A, _ := NewArei([][]float64{
-		{1, 2, 3},
+		{3, 3, 3},
 		{1, 3, 2},
 		{3, 2, 1},
 	})
@@ -278,7 +278,7 @@ func Test_10() {
 
 	// conditional where true if element >= 3
 	cond := func(element float64) bool {
-		if element >= 4.0 {
+		if element >= 3.0 {
 			return true
 		} else {
 			return false

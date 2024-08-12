@@ -17,21 +17,24 @@ func Where(a *Arei, condition func(float64) bool) (*Arei, error) {
 	}
 
 	// Initialize an empty slice to store the indices of max elements for each row
-	indices := make([]float64, numRows)
-
+	indices := make([][]float64, 0)
 	// Iterate over each row
 	for i := 0; i < numRows; i++ {
 		// Iterate over each column
 		for j := 0; j < numCols; j++ {
 			element := a.data[i*numCols+j]
 			if condition(element) {
-				indices = append(indices, float64(i))
+				hold := make([]float64, 2)
+				hold[0] = float64(i)
+				hold[1] = float64(j)
+				indices = append(indices, hold)
 			}
 		}
 	}
 
 	// Return the indices as a new Arei
-	return NewArei(indices)
+	resultArei, err := NewArei(indices)
+	return resultArei, err
 }
 
 // WhereMax finds the indices of the maximum value along each row of an arei.
