@@ -1,4 +1,4 @@
-package tensor
+package arei
 
 import (
 	"fmt"
@@ -6,8 +6,8 @@ import (
 )
 
 func Test_1() {
-	// Create a vector (1D Tensor)
-	x, err := NewTensor([]float64{1, 2, 3})
+	// Create a vector (1D Arei)
+	x, err := NewArei([]float64{1, 2, 3})
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
@@ -15,7 +15,7 @@ func Test_1() {
 	fmt.Println(x)
 
 	// Create another vector
-	y, _ := NewTensor([]float64{2, 3, 4})
+	y, _ := NewArei([]float64{2, 3, 4})
 
 	log.Println("Test_ 1 of dot product of two equal length vectors")
 	log.Println("x: ", x, " y: ", y)
@@ -27,10 +27,10 @@ func Test_1() {
 
 func Test_2() {
 	// Create a vector
-	x, _ := NewTensor([]float64{5, 6, 7})
+	x, _ := NewArei([]float64{5, 6, 7})
 
 	// scalar element
-	y, _ := NewTensor([]float64{5})
+	y, _ := NewArei([]float64{5})
 
 	log.Println("Test_ 2 of dot product of vector and scalar")
 	log.Println("x: ", x, " y: ", y)
@@ -42,7 +42,7 @@ func Test_2() {
 
 func Test_3() {
 	// Create matrix
-	A, _ := NewTensor([][]float64{
+	A, _ := NewArei([][]float64{
 		{1, 2, 3},
 		{2, 3, 3},
 		{9, 2, 0},
@@ -66,10 +66,10 @@ func Test_3() {
 func Test_4() {
 
 	// Test_ statement
-	log.Println("Test_4 tests creation of identity matrix and zeros tensor")
+	log.Println("Test_4 tests creation of identity matrix and zeros Arei")
 
 	// None Sqaure matrix
-	A, _ := NewTensor([][]float64{
+	A, _ := NewArei([][]float64{
 		{1, 2},
 		{2, 2},
 		{3, 3},
@@ -78,7 +78,7 @@ func Test_4() {
 	log.Println("Matrix A non-sqaure:", A)
 
 	// Sqaure matrix
-	B, _ := NewTensor([][]float64{
+	B, _ := NewArei([][]float64{
 		{2, 3, 1},
 		{2, 2, 2},
 		{2, 1, 1},
@@ -102,12 +102,12 @@ func Test_4() {
 		log.Println("I of B:", bI)
 	}
 
-	// Test Zeros tensor
+	// Test Zeros Arei
 	zeroA, _ := Zeros([]int{2, 2})
 
 	log.Println("2x2 Zeros matrix:", zeroA)
 
-	// Test vector zeros tensor
+	// Test vector zeros Arei
 
 	zeroX, _ := Zeros([]int{1, 5})
 
@@ -116,8 +116,8 @@ func Test_4() {
 }
 
 func Test_5() {
-	// Test Tensor methods
-	log.Println("Test_5 for tensor methods")
+	// Test Arei methods
+	log.Println("Test_5 for Arei methods")
 
 	// Check same shape
 	A, _ := Zeros([]int{3, 3})
@@ -125,7 +125,7 @@ func Test_5() {
 	C, _ := Zeros([]int{2, 5})
 
 	log.Println("A:", A, "\nB:", B, "\nC:", C)
-	log.Println("Testing A.sameShape(*Tensor)")
+	log.Println("Testing A.sameShape(*Arei)")
 	log.Println("A same shape as B:", A.sameShape(B))
 	log.Println("A same shape as C", A.sameShape(C))
 
@@ -143,7 +143,7 @@ func Test_5() {
 }
 
 func Test_6() {
-	// Test Tensor transpose
+	// Test Arei transpose
 
 	// Matrix transpose
 	A, _ := Zeros([]int{2, 5})

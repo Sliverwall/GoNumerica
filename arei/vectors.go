@@ -1,22 +1,22 @@
-package tensor
+package arei
 
 import "errors"
 
-// DotProduct calculates the dot product or scalar-vector product of two Tensors.
-func DotProduct(a, b *Tensor) (*Tensor, error) {
-	// Check that both tensors are 1D
+// DotProduct calculates the dot product or scalar-vector product of two Areis.
+func DotProduct(a, b *Arei) (*Arei, error) {
+	// Check that both Areis are 1D
 	if len(a.shape) != 1 || len(b.shape) != 1 {
-		return nil, errors.New("both tensors must be 1D for dot product")
+		return nil, errors.New("both Areis must be 1D for dot product")
 	}
 
 	lengthA, lengthB := a.shape[0], b.shape[0]
 
-	// Initialize result Tensor
-	result := &Tensor{}
+	// Initialize result Arei
+	result := &Arei{}
 
 	if lengthA == 1 && lengthB != 1 {
 		// Scalar-vector multiplication
-		result = &Tensor{
+		result = &Arei{
 			shape: []int{lengthB},
 			data:  make([]float64, lengthB),
 		}
@@ -25,7 +25,7 @@ func DotProduct(a, b *Tensor) (*Tensor, error) {
 		}
 	} else if lengthA != 1 && lengthB == 1 {
 		// Vector-scalar multiplication
-		result = &Tensor{
+		result = &Arei{
 			shape: []int{lengthA},
 			data:  make([]float64, lengthA),
 		}
@@ -38,7 +38,7 @@ func DotProduct(a, b *Tensor) (*Tensor, error) {
 		for i := 0; i < lengthA; i++ {
 			sum += a.data[i] * b.data[i]
 		}
-		result = &Tensor{
+		result = &Arei{
 			shape: []int{1},
 			data:  []float64{sum},
 		}

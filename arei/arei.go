@@ -1,19 +1,19 @@
-package tensor
+package arei
 
 import (
 	"errors"
 	"fmt"
 )
 
-// Tensor represents a multi-dimensional array, including vectors and matrices, for float64 data.
-type Tensor struct {
+// Arei represents a multi-dimensional array, including vectors and matrices, for float64 data.
+type Arei struct {
 	shape []int
 	data  []float64
 }
 
-// NewTensor creates a new Tensor based on the provided data.
+// NewArei creates a new Arei based on the provided data.
 // It automatically determines the shape based on the type of data.
-func NewTensor(data interface{}) (*Tensor, error) {
+func NewArei(data interface{}) (*Arei, error) {
 	var shape []int
 	var flatData []float64
 
@@ -37,19 +37,19 @@ func NewTensor(data interface{}) (*Tensor, error) {
 		return nil, errors.New("unsupported data type")
 	}
 
-	return &Tensor{
+	return &Arei{
 		shape: shape,
 		data:  flatData,
 	}, nil
 }
 
-// sameShape checks if two Tensors have the same shape.
-func (t *Tensor) sameShape(other *Tensor) bool {
-	if len(t.shape) != len(other.shape) {
+// sameShape checks if two Areis have the same shape.
+func (a *Arei) sameShape(other *Arei) bool {
+	if len(a.shape) != len(other.shape) {
 		return false
 	}
 
-	for i, dim := range t.shape {
+	for i, dim := range a.shape {
 		if dim != other.shape[i] {
 			return false
 		}
@@ -58,57 +58,56 @@ func (t *Tensor) sameShape(other *Tensor) bool {
 	return true
 }
 
-// Reshape changes the shape of the Tensor, keeping the data intact.
-func (t *Tensor) Reshape(newShape []int) error {
+// Reshape changes the shape of the Arei, keeping the data intact.
+func (a *Arei) Reshape(newShape []int) error {
 	size := 1
 	for _, dim := range newShape {
 		size *= dim
 	}
 
-	if size != len(t.data) {
+	if size != len(a.data) {
 		return errors.New("new shape must have the same number of elements as the original")
 	}
 
-	t.shape = newShape
+	a.shape = newShape
 	return nil
 }
 
-// String returns a string representation of the Tensor.
-func (t *Tensor) String() string {
-	switch len(t.shape) {
+// String returns a string representation of the Arei.
+func (a *Arei) String() string {
+	switch len(a.shape) {
 	// String for vector form
 	case 1:
-		return fmt.Sprintf("Vector: %v", t.data)
+		return fmt.Sprintf("Vector: %v", a.data)
 	// String for Matrix form.
 	case 2:
-		rows, cols := t.shape[0], t.shape[1]
+		rows, cols := a.shape[0], a.shape[1]
 		result := "\n"
 		for i := 0; i < rows; i++ {
 			// Avoid extra space at final row
 			if i+1 == rows {
-				result += fmt.Sprintf("%v", t.data[i*cols:(i+1)*cols])
+				result += fmt.Sprintf("%v", a.data[i*cols:(i+1)*cols])
 			} else {
-				result += fmt.Sprintf("%v\n", t.data[i*cols:(i+1)*cols])
+				result += fmt.Sprintf("%v\n", a.data[i*cols:(i+1)*cols])
 			}
 		}
 		return result
 	default:
-		return "Tensor of unsupported dimension"
+		return "Arei of unsupported dimension"
 	}
 }
 
-// Transpose transposes a Tensors. Works for both 1D and 2D
-func (t *Tensor) Transpose() error {
+// Transpose transposes a Areis. Works for both 1D and 2D
+func (fa *Arei) Transpose() {
 
-	transposedData := make([]float64, len(t.data))
-	rows, cols := t.shape[0], t.shape[1]
+	transposedData := make([]float64, len(fa.data))
+	rows, cols := fa.shape[0], fa.shape[1]
 
 	for i := 0; i < rows; i++ {
 		for j := 0; j < cols; j++ {
-			transposedData[j*rows+i] = t.data[i*cols+j]
+			transposedData[j*rows+i] = fa.data[i*cols+j]
 		}
 	}
-	t.shape = []int{cols, rows}
-	t.data = transposedData
-	return nil
+	fa.shape = []int{cols, rows}
+	fa.data = transposedData
 }

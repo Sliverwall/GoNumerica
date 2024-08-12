@@ -1,9 +1,9 @@
-package tensor
+package arei
 
 import "errors"
 
 // MatrixProduct performs matrix multiplication of two Tensors representing matrices.
-func MatrixProduct(A, B *Tensor) (*Tensor, error) {
+func MatrixProduct(A, B *Arei) (*Arei, error) {
 	// Check that A and B are 2D tensors
 	if len(A.shape) != 2 || len(B.shape) != 2 {
 		return nil, errors.New("both tensors must be 2D for matrix multiplication")
@@ -18,7 +18,7 @@ func MatrixProduct(A, B *Tensor) (*Tensor, error) {
 	}
 
 	// Initialize result matrix C with zeros
-	C := &Tensor{
+	C := &Arei{
 		shape: []int{numARows, numBCols},
 		data:  make([]float64, numARows*numBCols),
 	}
