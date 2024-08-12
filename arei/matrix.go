@@ -8,7 +8,7 @@ import (
 func MatrixProduct(A, B *Arei) (*Arei, error) {
 	// Check that A and B are 2D tensors
 	if len(A.Shape) != 2 || len(B.Shape) != 2 {
-		return nil, errors.New("both tensors must be 2D for matrix multiplication")
+		return nil, errors.New("both areis must be 2D for matrix multiplication")
 	}
 
 	numARows, numACols := A.Shape[0], A.Shape[1]
@@ -40,21 +40,25 @@ func MatrixProduct(A, B *Arei) (*Arei, error) {
 }
 
 // Assume it will work always for now
-// UpperTri takes a given aeri and outputs the upper trianglar matrix
-func UpperTri(a *Arei) (*Arei, error) {
+// Elimination takes a given aeri and outputs the upper trianglar matrix
+func Elimination(a *Arei) (*Arei, *Arei, error) {
 	// Assume a matrix
 	if len(a.Shape) == 1 {
-		return nil, errors.New("arei cannot be a 1d arei")
+		return nil, nil, errors.New("arei cannot be a 1d arei")
 	}
 	// Assume a sqaure matrix
 	if a.Shape[0] != a.Shape[1] {
-		return nil, errors.New("arei must be a square matrix")
+		return nil, nil, errors.New("arei must be a square matrix")
 	}
 
 	// Create copy of input arei
 	u, _ := a.Copy()
 	// Number of pivots equal to number of cols - 1. Do not need to pivot last row
 	nPivots := u.Shape[0] - 1
+
+	// Create factor array to hold all needed factors
+	factorArrayCounter := 0
+	factorArray := make([]int, u.Shape[0])
 
 	for i := range nPivots {
 		// pivot will be along the dianole of square matrix
@@ -63,14 +67,19 @@ func UpperTri(a *Arei) (*Arei, error) {
 		// num factors will be equal to nPivots - current pivot index
 		numFactor := nPivots - i
 
-		// create factor array to hold all needed factors
+		// Create factor array to hold factors needed for the current row
 		factorList := make([]int, numFactor)
 		for factorIndex := range numFactor {
 			// Get values below pivot till reaching the bottom of the matrix
 			factorValue, _ := u.Index(factorIndex+1, i)
 
 			// factorRx = Axi * Aii
-			factorList[factorIndex] = int(factorValue) * int(pivot)
+			factor_pivot := int(factorValue) * int(pivot)
+			factorList[factorIndex] = factor_pivot
+
+			// Add factor to list of all factors needed
+			factorArray[factorArrayCounter] = factor_pivot
+			factorArrayCounter += 1
 		}
 
 		for rowIndex := range numFactor {
@@ -95,6 +104,22 @@ func UpperTri(a *Arei) (*Arei, error) {
 			}
 		}
 	}
-	return u, nil
+	// Now find the lower trianglar as l
+	l, _ := Identity(u)
+
+	// Set indexes for L based on stored factorArray
+	row, col := 0, 0
+	for i := range factorArray {
+		for j := range i {
+			row = i
+			col = j
+			// // Debug statement
+			// log.Println("i,j", "(", i, j, ") item:", factorArray[(i+j)-1], " at row,col", row, col)
+
+			l.SetIndex(float64(factorArray[(i+j)-1]), row, col)
+		}
+	}
+
+	return l, u, nil
 
 }

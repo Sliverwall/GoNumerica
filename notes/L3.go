@@ -25,7 +25,11 @@ func Example8() {
 
 	// Get L and U from A assuming P == I
 
-	A, _ := arei.UpperTri(case1)
-	case1.Frame()
-	A.Frame()
+	L, U, _ := arei.Elimination(case1)
+
+	// Get A from MatrixProduct of LU
+	A, _ := arei.MatrixProduct(L, U)
+
+	log.Println("A from LU:", A)
+
 }
