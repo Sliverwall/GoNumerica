@@ -271,10 +271,19 @@ func Test_10() {
 	// Now a vector
 	X, _ := NewArei([]float64{1, 2, 3})
 
-	log.Println("vecotr X:", X)
+	log.Println("vector X:", X)
 
 	maxIndexesVector, _ := WhereMax(X)
 	log.Println("Max index of X", maxIndexesVector)
+
+	// Find min indexes along each row
+	minIndexes, _ := WhereMin(A)
+
+	log.Println("Min indices of A along each row:", minIndexes)
+
+	// Find min index of vector
+	minIndexVector, _ := WhereMin(X)
+	log.Println("Min index of X", minIndexVector)
 
 	// conditional where true if element >= 3
 	cond := func(element float64) bool {
@@ -287,4 +296,11 @@ func Test_10() {
 	threeIndexes, _ := Where(A, cond)
 	log.Println(threeIndexes)
 
+	// Test Index method
+	value, _ := A.Index(0, 2)
+	log.Println("A.Index(0,2) is (row=0,col=2) == A[0][2]:", value)
+
+	valueX, _ := X.Index(2)
+
+	log.Println("X.Index(2) for just column in 1D arei:", valueX)
 }

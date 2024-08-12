@@ -101,7 +101,6 @@ func (a *Arei) Reshape(newShape []int) error {
 
 // Transpose takes each row in the Arei and repositions it as a column
 func (a *Arei) Transpose() {
-
 	transposedData := make([]float64, len(a.data))
 	var rows, cols int
 	if len(a.shape) == 2 {
@@ -143,6 +142,58 @@ func (a *Arei) Flatten() error {
 // Count returns the number of elements in the arei
 func (a *Arei) Count() int {
 	return len(a.data)
+}
+
+// Index returns the element at the specified index for 1D Areis or at the specified row and column for 2D Areis.
+func (a *Arei) Index(indices ...int) (float64, error) {
+	switch len(a.shape) {
+	case 1:
+		if len(indices) != 1 {
+			return 0, errors.New("1D Arei requires exactly 1 index")
+		}
+		if indices[0] < 0 || indices[0] >= a.shape[0] {
+			return 0, errors.New("index out of bounds")
+		}
+		return a.data[indices[0]], nil
+	case 2:
+		if len(indices) != 2 {
+			return 0, errors.New("2D Arei requires exactly 2 indices")
+		}
+		row, col := indices[0], indices[1]
+		if row < 0 || row >= a.shape[0] || col < 0 || col >= a.shape[1] {
+			return 0, errors.New("index out of bounds")
+		}
+		return a.data[row*a.shape[1]+col], nil
+	default:
+		return 0, errors.New("Arei of unsupported dimension")
+	}
+}
+
+// SetIndex sets the element at the specified index for 1D Areis or at the specified row and column for 2D Areis.
+func (a *Arei) SetIndex(value float64, indices ...int) error {
+	switch len(a.shape) {
+	case 1:
+		if len(indices) != 1 {
+			return errors.New("1D Arei requires exactly 1 index")
+		}
+		if indices[0] < 0 || indices[0] >= a.shape[0] {
+			return errors.New("index out of bounds")
+		}
+		a.data[indices[0]] = value
+		return nil
+	case 2:
+		if len(indices) != 2 {
+			return errors.New("2D Arei requires exactly 2 indices")
+		}
+		row, col := indices[0], indices[1]
+		if row < 0 || row >= a.shape[0] || col < 0 || col >= a.shape[1] {
+			return errors.New("index out of bounds")
+		}
+		a.data[row*a.shape[1]+col] = value
+		return nil
+	default:
+		return errors.New("Arei of unsupported dimension")
+	}
 }
 
 // Max finds the max element in an Arei
