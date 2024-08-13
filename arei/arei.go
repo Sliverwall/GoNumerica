@@ -142,6 +142,21 @@ func (a *Arei) Transpose() {
 
 }
 
+// CopyTranspose returns a transposed copy of the arei
+func (a *Arei) CopyTranpose() (*Arei, error) {
+	// Create copy of input as to not affect inputed arei
+	at, err := a.Copy()
+	if err != nil {
+		return nil, errors.New("failed to create copy of arei")
+	}
+
+	// Tranpose copy of copied arei
+	at.Transpose()
+
+	// return transposed copy
+	return at, nil
+}
+
 // Flatten takes an Arei and forces it to be 1xN
 func (a *Arei) Flatten() error {
 	// Check if vector

@@ -139,3 +139,45 @@ func Example10() {
 	log.Println("Students/Zombies at T =", setTime)
 	at_hour.Frame()
 }
+
+func Example11() {
+	// There are n! permunations of I where n = num of rows or cols (sqaure matrix only)
+	// PT * P = I
+
+	P, _ := arei.NewArei([][]float64{
+		{0, 0, 0, 1},
+		{0, 1, 0, 0},
+		{1, 0, 0, 0},
+		{0, 0, 1, 0},
+	})
+
+	PT, _ := P.Copy()
+	PT.Transpose()
+
+	log.Println("P")
+	P.Frame()
+	log.Println("PT")
+	PT.Frame()
+
+	PT_P, _ := arei.MatrixProduct(PT, P)
+	log.Println("PT * P = I")
+	PT_P.Frame()
+
+	// Transpose definition (AT)ij = Aji
+	// 2x2
+	A, _ := arei.NewArei([][]float64{
+		{0.8, 0.1},
+		{0.2, 0.9},
+	})
+
+	AT, _ := A.CopyTranpose()
+
+	log.Println("AT")
+	AT.Frame()
+
+	// Check (AT)ij = Aji where = 0 and j = 1
+	AT01, _ := AT.Index(0, 1)
+	A10, _ := A.Index(1, 0)
+	log.Println("(AT)01 =", AT01, "and (A)10 =", A10)
+
+}
