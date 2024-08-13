@@ -183,6 +183,14 @@ func (a *Arei) Index(indices ...int) (float64, error) {
 		if len(indices) != 2 {
 			return 0, errors.New("2D Arei requires exactly 2 indices")
 		}
+
+		// Allow negative indexing
+		if indices[0] < 0 {
+			indices[0] += a.Shape[0]
+		}
+		if indices[1] < 0 {
+			indices[1] += a.Shape[1]
+		}
 		row, col := indices[0], indices[1]
 		if row < 0 || row >= a.Shape[0] || col < 0 || col >= a.Shape[1] {
 			return 0, errors.New("index out of bounds")

@@ -65,13 +65,13 @@ func Identity(a *Arei) (*Arei, error) {
 // Zeros creates a Arei of zeros based on the provided Shape.
 func Zeros(Shape []int) (*Arei, error) {
 	if len(Shape) == 0 {
-		return nil, errors.New("Shape cannot be empty")
+		return nil, errors.New("shape cannot be empty")
 	}
 
 	size := 1
 	for _, dim := range Shape {
 		if dim <= 0 {
-			return nil, errors.New("Shape dimensions must be positive integers")
+			return nil, errors.New("shape dimensions must be positive integers")
 		}
 		size *= dim
 	}

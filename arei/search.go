@@ -119,6 +119,10 @@ func Row(a *Arei, rowIndex int) (*Arei, error) {
 		return nil, errors.New("1d aeri only have 1 row")
 	}
 
+	// Check for valid length
+	if math.Abs(float64(rowIndex)) > float64(a.Shape[0]) {
+		return nil, errors.New("index out of bounds")
+	}
 	// if negative index, count backwards
 	if rowIndex < 0 {
 		// Shape is not 0-indexed, thus negative rowIndex + shape will give backward result
@@ -141,9 +145,13 @@ func Column(a *Arei, colIndex int) (*Arei, error) {
 		return nil, errors.New("1d aeri only have 1 row")
 	}
 
+	// Check for valid length
+	if math.Abs(float64(colIndex)) > float64(a.Shape[1]) {
+		return nil, errors.New("index out of bounds")
+	}
 	// if negative index, count backwards
 	if colIndex < 0 {
-		// Shape is not 0-indexed, thus negative rowIndex + shape will give backward result
+		// Shape is not 0-indexed, thus negative colIndex + shape will give backward result
 		colIndex += a.Shape[0]
 	}
 

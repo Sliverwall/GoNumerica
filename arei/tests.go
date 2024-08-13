@@ -342,7 +342,7 @@ func Test_12() {
 	// Test Row and Column search functions
 
 	A, _ := NewArei([][]float64{
-		{1, 2, 3},
+		{1, 2, 4},
 		{1, 2, 3},
 		{3, 2, 1},
 	})
@@ -353,4 +353,13 @@ func Test_12() {
 	log.Println("Row0:", row0)
 	col2, _ := Column(A, 2)
 	log.Println("Col2:", col2)
+
+	rowNeg1, _ := Row(A, -1)
+	colNeg2, _ := Column(A, -2)
+	log.Println("Row-1", rowNeg1)
+	log.Println("col-2", colNeg2)
+
+	// Test negative indexing
+	indexNeg1Neg1, _ := A.Index(-2, -1)
+	log.Println("A.Index(-2,-1)", indexNeg1Neg1)
 }
