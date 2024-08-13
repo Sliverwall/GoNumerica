@@ -46,10 +46,6 @@ func Elimination(a *Arei) (*Arei, *Arei, error) {
 	if len(a.Shape) == 1 {
 		return nil, nil, errors.New("arei cannot be a 1d arei")
 	}
-	// Assume a sqaure matrix
-	if a.Shape[0] != a.Shape[1] {
-		return nil, nil, errors.New("arei must be a square matrix")
-	}
 
 	// Create copy of input arei
 	u, _ := a.Copy()

@@ -39,7 +39,7 @@ func Ns(Shape []int, n ...float64) (*Arei, error) {
 	return &Arei{Shape: Shape, Data: Data}, nil
 }
 
-// Identity creates an identity Arei with the same Shape as the given Arei
+// Identity outputs for a given matrix of shape m x n, an m x m identity matrix.
 func Identity(a *Arei) (*Arei, error) {
 	switch len(a.Shape) {
 	case 1:
@@ -50,14 +50,13 @@ func Identity(a *Arei) (*Arei, error) {
 		}
 		return &Arei{Shape: a.Shape, Data: identityData}, nil
 	case 2:
-		if a.Shape[0] != a.Shape[1] {
-			return nil, errors.New("cannot create an identity matrix for a non-square matrix")
+		// Use the minimum of rows and columns to form a square identity matrix
+		size := a.Shape[0] // The number of rows determines the identity matrix size
+		identityData := make([]float64, size*size)
+		for i := 0; i < size; i++ {
+			identityData[i*size+i] = 1.0
 		}
-		identityData := make([]float64, len(a.Data))
-		for i := 0; i < a.Shape[0]; i++ {
-			identityData[i*a.Shape[0]+i] = 1.0
-		}
-		return &Arei{Shape: a.Shape, Data: identityData}, nil
+		return &Arei{Shape: []int{size, size}, Data: identityData}, nil
 	default:
 		return nil, errors.New("invalid Shape for identity Arei")
 	}
