@@ -362,4 +362,10 @@ func Test_12() {
 	// Test negative indexing
 	indexNeg1Neg1, _ := A.Index(-2, -1)
 	log.Println("A.Index(-2,-1)", indexNeg1Neg1)
+
+	log.Println("SetIndex(10,-2,-1)")
+	A.SetIndex(10.0, -2, -1)
+	indexNeg1Neg1, _ = A.Index(-2, -1)
+	log.Println("A.Index(-2,-1)", indexNeg1Neg1)
+
 }

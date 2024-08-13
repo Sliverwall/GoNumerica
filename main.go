@@ -1,7 +1,7 @@
 package main
 
 import (
-	"GoNumerica/arei"
+	"GoNumerica/notes"
 	"log"
 )
 
@@ -9,5 +9,5 @@ func main() {
 	log.Println("Hello GoNumerica")
 
 	// Print examples
-	arei.Test_12()
+	notes.Example10()
 }

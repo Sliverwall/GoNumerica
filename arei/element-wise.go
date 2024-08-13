@@ -91,6 +91,3 @@ func Div(a, b *Arei) (*Arei, error) {
 		Data:  resultData,
 	}, nil
 }
-
-// Element wise with vectors. Will use theses for elimantion
-// Want to be able to make row 2 of A = row 2 of A + 2 row 1 of A

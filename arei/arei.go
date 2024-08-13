@@ -13,7 +13,6 @@ type Arei struct {
 }
 
 // NewArei creates a new Arei based on the provided Data.
-// It automatically determines the Shape based on the type of Data.
 func NewArei(Data interface{}) (*Arei, error) {
 	var Shape []int
 	var flatData []float64
@@ -24,7 +23,7 @@ func NewArei(Data interface{}) (*Arei, error) {
 		flatData = v
 	case [][]float64:
 		if len(v) == 0 {
-			return nil, errors.New("Data cannot be empty")
+			return nil, errors.New("data cannot be empty")
 		}
 		Shape = []int{len(v), len(v[0])}
 		flatData = make([]float64, 0, Shape[0]*Shape[1])

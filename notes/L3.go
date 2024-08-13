@@ -101,3 +101,41 @@ func Example9() {
 	log.Println("U:")
 	U.Frame()
 }
+
+func Example10() {
+	// Why Matrices are import video
+
+	// 150 students and zombie in a school. Every hour 20% of humans turn into zombies and 10% of zombies cured
+	// humans : 0.8(h) + 0.1(z)
+	// zombies : 0.2(h) + 0.9(z)
+
+	// Markov Matrix
+	// 2x2
+	A, err := arei.NewArei([][]float64{
+		{0.8, 0.1},
+		{0.2, 0.9},
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	setTime := 40
+
+	// multiply A by itself x times to get the markov matrix needed for any given timepoint
+	for i := 0; i < setTime; i++ {
+		A, err = arei.MatrixProduct(A, A)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+	}
+	// vector of humans and zombies at t = 0
+	t0, _ := arei.NewArei([][]float64{
+		{150},
+		{150},
+	})
+
+	at_hour, _ := arei.MatrixProduct(A, t0)
+	log.Println("Students/Zombies at T =", setTime)
+	at_hour.Frame()
+}

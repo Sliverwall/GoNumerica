@@ -7,7 +7,7 @@ import (
 
 // MatrixProduct performs matrix multiplication of two Arei representing matrices.
 func MatrixProduct(A, B *Arei) (*Arei, error) {
-	// Check that A and B are 2D tensors
+	// Check that A and B are 2D areis
 	if len(A.Shape) != 2 || len(B.Shape) != 2 {
 		return nil, errors.New("both areis must be 2D for matrix multiplication")
 	}
