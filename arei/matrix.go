@@ -2,6 +2,7 @@ package arei
 
 import (
 	"errors"
+	"fmt"
 )
 
 // MatrixProduct performs matrix multiplication of two Arei representing matrices.
@@ -39,83 +40,56 @@ func MatrixProduct(A, B *Arei) (*Arei, error) {
 	return C, nil
 }
 
-// Assume it will work always for now
-// Elimination takes a given aeri and outputs the upper trianglar matrix
+// Elimination performs Gaussian elimination on the given Arei and returns L and U
 func Elimination(a *Arei) (*Arei, *Arei, error) {
-	// Assume a matrix
-	if len(a.Shape) == 1 {
-		return nil, nil, errors.New("arei cannot be a 1d arei")
+	// Check if the input is a 2D Arei
+	if len(a.Shape) != 2 {
+		return nil, nil, errors.New("arei must be a 2D matrix")
 	}
 
-	// Create copy of input arei
-	u, _ := a.Copy()
-	// Number of pivots equal to number of cols - 1. Do not need to pivot last row
-	nPivots := u.Shape[0] - 1
+	// Create a copy of the input Arei
+	u, err := a.Copy()
+	if err != nil {
+		return nil, nil, fmt.Errorf("failed to copy arei: %w", err)
+	}
 
-	// Create factor array to hold all needed factors
-	factorArrayCounter := 0
-	factorArray := make([]int, u.Shape[0])
+	rows, cols := u.Shape[0], u.Shape[1]
+	if rows > cols {
+		return nil, nil, errors.New("cannot perform elimination on a tall matrix")
+	}
 
-	for i := range nPivots {
-		// pivot will be along the dianole of square matrix
+	// Initialize L as an identity matrix
+	l, err := Identity(u)
+	if err != nil {
+		return nil, nil, fmt.Errorf("failed to create identity matrix: %w", err)
+	}
+
+	// Perform Gaussian elimination
+	for i := 0; i < rows-1; i++ {
+		// Pivot element
 		pivot, _ := u.Index(i, i)
-
-		// num factors will be equal to nPivots - current pivot index
-		numFactor := nPivots - i
-
-		// Create factor array to hold factors needed for the current row
-		factorList := make([]int, numFactor)
-		for factorIndex := range numFactor {
-			// Get values below pivot till reaching the bottom of the matrix
-			factorValue, _ := u.Index(factorIndex+1, i)
-
-			// factorRx = Axi * Aii
-			factor_pivot := int(factorValue) * int(pivot)
-			factorList[factorIndex] = factor_pivot
-
-			// Add factor to list of all factors needed
-			factorArray[factorArrayCounter] = factor_pivot
-			factorArrayCounter += 1
+		if pivot == 0 {
+			return nil, nil, errors.New("pivot is zero, cannot eliminate")
 		}
 
-		for rowIndex := range numFactor {
-			// Get row to modify
-			// Rx = Rx - (factorRx * Ri)
-			rx, _ := Row(u, rowIndex+1+i)
-			// // Debug statement see selected row before element-wise sub
-			// log.Println("Row before sub", rowIndex+1+i, rx)
-			ri, _ := Row(u, i)
-			factorRx, _ := NewArei([]float64{float64(factorList[rowIndex])})
+		for j := i + 1; j < rows; j++ {
+			// Calculate the factor to eliminate the current row
+			factor, _ := u.Index(j, i)
+			factor = factor / pivot
 
-			factorRx_ri, _ := DotProduct(ri, factorRx)
+			// Store the factor in L
+			l.SetIndex(factor, j, i)
 
-			rx, _ = Sub(rx, factorRx_ri)
-			// // Debug statement see selected row after element-wise sub
-			// log.Println("Row after sub", rowIndex+1+i, rx)
-
-			// overwrite row in u with new row's values
-			for newRowIndex := range u.Shape[0] {
-				setValue := rx.Data[newRowIndex]
-				u.SetIndex(setValue, rowIndex+1+i, newRowIndex)
+			// Subtract the scaled pivot row from the current row
+			for k := i; k < cols; k++ {
+				// Rx = Rx - (factorRx * Ri)
+				Rx_k, _ := u.Index(j, k)
+				Ri_k, _ := u.Index(i, k)
+				newValue := Rx_k - factor*Ri_k
+				u.SetIndex(newValue, j, k)
 			}
-		}
-	}
-	// Now find the lower trianglar as l
-	l, _ := Identity(u)
-
-	// Set indexes for L based on stored factorArray
-	row, col := 0, 0
-	for i := range factorArray {
-		for j := range i {
-			row = i
-			col = j
-			// // Debug statement
-			// log.Println("i,j", "(", i, j, ") item:", factorArray[(i+j)-1], " at row,col", row, col)
-
-			l.SetIndex(float64(factorArray[(i+j)-1]), row, col)
 		}
 	}
 
 	return l, u, nil
-
 }
