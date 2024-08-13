@@ -133,3 +133,25 @@ func Row(a *Arei, rowIndex int) (*Arei, error) {
 	}
 	return NewArei(resultData)
 }
+
+// Column returns a specified column, by index, of an aeri as a 1D aeri
+func Column(a *Arei, colIndex int) (*Arei, error) {
+	// 1D areis cannot be searched by row
+	if len(a.Shape) == 1 {
+		return nil, errors.New("1d aeri only have 1 row")
+	}
+
+	// if negative index, count backwards
+	if colIndex < 0 {
+		// Shape is not 0-indexed, thus negative rowIndex + shape will give backward result
+		colIndex += a.Shape[0]
+	}
+
+	resultData := make([]float64, a.Shape[1])
+
+	for i := range a.Shape[0] {
+		value, _ := a.Index(i, colIndex)
+		resultData[i] = value
+	}
+	return NewArei(resultData)
+}
