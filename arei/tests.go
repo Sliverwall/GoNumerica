@@ -369,3 +369,30 @@ func Test_12() {
 	log.Println("A.Index(-2,-1)", indexNeg1Neg1)
 
 }
+
+func Test_13() {
+	// Test Permutation function
+
+	// Replace row 0 with row 1, row 1 with 0, row 2 with 3, and row 0 with last row
+	instruction := [][]int{{0, 1}, {1, 0}, {2, 3}, {0, -1}}
+
+	A, _ := NewArei([][]float64{
+		{0, 0, 0, 0},
+		{1, 1, 1, 1},
+		{2, 2, 2, 2},
+		{3, 3, 3, 3},
+		{4, 4, 4, 4},
+		{5, 5, 5, 5},
+	})
+
+	P, err := Permutation(A.Shape, instruction)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Println("Instruction:", instruction, "\nPerumation:")
+	P.Frame()
+	log.Println("P*A:")
+	PA, _ := MatrixProduct(P, A)
+	PA.Frame()
+}
