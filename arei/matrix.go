@@ -59,7 +59,7 @@ func Elimination(a *Arei) (*Arei, *Arei, error) {
 	}
 
 	// Initialize L as an identity matrix
-	l, err := Identity(u)
+	l, err := Identity(u.Shape)
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to create identity matrix: %w", err)
 	}

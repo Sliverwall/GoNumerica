@@ -52,7 +52,7 @@ func Test_3() {
 	// Confirm matrix A
 	log.Println("Matrix A:", A)
 	// Use Identity function to create matrix I of A
-	I, _ := Identity(A)
+	I, _ := Identity(A.Shape)
 
 	// Confirm identity matrix
 	log.Println("Matrix I:", I)
@@ -87,7 +87,7 @@ func Test_4() {
 
 	// Test Identity for A
 
-	aI, err := Identity(A)
+	aI, err := Identity(A.Shape)
 	if err != nil {
 		log.Println(err)
 	} else {
@@ -95,7 +95,7 @@ func Test_4() {
 	}
 
 	// Test Identity for B
-	bI, err := Identity(B)
+	bI, err := Identity(B.Shape)
 	if err != nil {
 		log.Println(err)
 	} else {
