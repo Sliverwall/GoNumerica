@@ -8,7 +8,7 @@ import (
 // Search for collection of functions that search Areis
 
 // Where returns the indices of elements that satisfy the given condition.
-func Where(a *Arei, condition func(float64) bool) (*Arei, error) {
+func Where(a *Arei, condition func(float64) bool) *Arei {
 	var numRows, numCols int
 
 	if len(a.Shape) == 2 {
@@ -36,12 +36,12 @@ func Where(a *Arei, condition func(float64) bool) (*Arei, error) {
 	}
 
 	// Return the indices as a new Arei
-	resultArei, err := NewArei(indices)
-	return resultArei, err
+	resultArei, _ := NewArei(indices)
+	return resultArei
 }
 
 // WhereMax finds the indices of the maximum value along each row of an arei.
-func WhereMax(a *Arei) (*Arei, error) {
+func WhereMax(a *Arei) *Arei {
 
 	var numRows, numCols int
 
@@ -73,11 +73,12 @@ func WhereMax(a *Arei) (*Arei, error) {
 	}
 
 	// Return the indices as a new Arei
-	return NewArei(indices)
+	resultIndices, _ := NewArei(indices)
+	return resultIndices
 }
 
 // WhereMax finds the indices of the maximum value along each row of an arei.
-func WhereMin(a *Arei) (*Arei, error) {
+func WhereMin(a *Arei) *Arei {
 
 	var numRows, numCols int
 
@@ -109,7 +110,8 @@ func WhereMin(a *Arei) (*Arei, error) {
 	}
 
 	// Return the indices as a new Arei
-	return NewArei(indices)
+	resultIndices, _ := NewArei(indices)
+	return resultIndices
 }
 
 // Row returns a specified row, by index, of an aeri as a 1D aeri

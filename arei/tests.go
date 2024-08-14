@@ -174,7 +174,7 @@ func Test_7() {
 	log.Println("Matrix A:", A)
 
 	// Apply Exp function
-	A_E, _ := Exp(A)
+	A_E := Exp(A)
 
 	log.Println("Matrix A with Exp applied", A_E)
 
@@ -243,7 +243,7 @@ func Test_9() {
 	log.Println("AB_multi:", AB_multi)
 	log.Println("AB_div:", AB_div)
 
-	A_minus, _ := Sign(A)
+	A_minus := Sign(A)
 	log.Println("-A", A_minus)
 
 	// Assign function to variable to use in elementwise
@@ -266,7 +266,7 @@ func Test_10() {
 	})
 
 	log.Println("matrix A:", A)
-	maxIndexes, _ := WhereMax(A)
+	maxIndexes := WhereMax(A)
 
 	// Should be {2,1,0}
 	log.Println("Max indices of A along each row:", maxIndexes)
@@ -276,16 +276,16 @@ func Test_10() {
 
 	log.Println("vector X:", X)
 
-	maxIndexesVector, _ := WhereMax(X)
+	maxIndexesVector := WhereMax(X)
 	log.Println("Max index of X", maxIndexesVector)
 
 	// Find min indexes along each row
-	minIndexes, _ := WhereMin(A)
+	minIndexes := WhereMin(A)
 
 	log.Println("Min indices of A along each row:", minIndexes)
 
 	// Find min index of vector
-	minIndexVector, _ := WhereMin(X)
+	minIndexVector := WhereMin(X)
 	log.Println("Min index of X", minIndexVector)
 
 	// conditional where true if element >= 3
@@ -296,7 +296,7 @@ func Test_10() {
 			return false
 		}
 	}
-	threeIndexes, _ := Where(A, cond)
+	threeIndexes := Where(A, cond)
 	log.Println(threeIndexes)
 
 	// Test Index method

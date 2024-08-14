@@ -5,7 +5,7 @@ import "math"
 // Transformations take an existing Arei and apply a transformation to create a new Arei
 
 // Transform takes an Arei and a given transformation function and applies to each element
-func Transform(a *Arei, transformation func(float64) float64) (*Arei, error) {
+func Transform(a *Arei, transformation func(float64) float64) *Arei {
 	resultData := make([]float64, len(a.Data))
 
 	for i := range a.Data {
@@ -15,11 +15,11 @@ func Transform(a *Arei, transformation func(float64) float64) (*Arei, error) {
 	return &Arei{
 		Shape: a.Shape,
 		Data:  resultData,
-	}, nil
+	}
 }
 
 // Exp takes each element in an Arei with base euler's number
-func Exp(a *Arei) (*Arei, error) {
+func Exp(a *Arei) *Arei {
 
 	resultData := make([]float64, len(a.Data))
 
@@ -30,11 +30,11 @@ func Exp(a *Arei) (*Arei, error) {
 	return &Arei{
 		Shape: a.Shape,
 		Data:  resultData,
-	}, nil
+	}
 }
 
 // Sign creates a new arei with flipped signs on each element
-func Sign(a *Arei) (*Arei, error) {
+func Sign(a *Arei) *Arei {
 
 	resultData := make([]float64, len(a.Data))
 
@@ -45,5 +45,5 @@ func Sign(a *Arei) (*Arei, error) {
 	return &Arei{
 		Shape: a.Shape,
 		Data:  resultData,
-	}, nil
+	}
 }
