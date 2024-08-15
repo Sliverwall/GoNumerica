@@ -40,34 +40,63 @@ func MatrixProduct(A, B *Arei) (*Arei, error) {
 	return C, nil
 }
 
-// Elimination performs Gaussian elimination on the given Arei and returns L and U
-func Elimination(a *Arei) (*Arei, *Arei, error) {
+// Elimination performs Gaussian elimination on the given Arei and returns L, U, P, and number of row swaps
+func Elimination(a *Arei) (*Arei, *Arei, *Arei, int, error) {
 	// Check if the input is a 2D Arei
 	if len(a.Shape) != 2 {
-		return nil, nil, errors.New("arei must be a 2D matrix")
+		return nil, nil, nil, 0, errors.New("arei must be a 2D matrix")
 	}
 
 	// Create a copy of the input Arei
 	u, err := a.Copy()
 	if err != nil {
-		return nil, nil, fmt.Errorf("failed to copy arei: %w", err)
+		return nil, nil, nil, 0, fmt.Errorf("failed to copy arei: %w", err)
 	}
 
 	rows, cols := u.Shape[0], u.Shape[1]
 
-	// Initialize L as an identity matrix
+	// Initialize L and P as identity matrices
 	l, err := Identity(u.Shape)
 	if err != nil {
-		return nil, nil, fmt.Errorf("failed to create identity matrix: %w", err)
+		return nil, nil, nil, 0, fmt.Errorf("failed to create identity matrix: %w", err)
 	}
 
-	// Perform Gaussian elimination
+	p, err := Identity(u.Shape)
+	if err != nil {
+		return nil, nil, nil, 0, fmt.Errorf("failed to create identity matrix: %w", err)
+	}
+
+	// Track the number of row swaps
+	rowSwaps := 0
+
+	// Perform Gaussian elimination with row swapping
 	for i := 0; i < rows-1; i++ {
 		// Pivot element
 		pivot, _ := u.Index(i, i)
-		// if pivot == 0 {
-		// 	return nil, nil, errors.New("pivot is zero, cannot eliminate")
-		// }
+
+		// If the pivot is zero, find a row below to swap
+		if pivot == 0 {
+			rowSwapped := false
+			for j := i + 1; j < rows; j++ {
+				newPivot, _ := u.Index(j, i)
+				if newPivot != 0 {
+					// Swap rows i and j in the U matrix
+					u.SwapRows(i, j)
+					// Swap rows i and j in the L matrix (before column i)
+					l.SwapRows(i, j)
+					// Swap rows i and j in the permutation matrix P
+					p.SwapRows(i, j)
+					rowSwaps++ // Increment row swap counter
+					pivot = newPivot
+					rowSwapped = true
+					break
+				}
+			}
+			// If no row was found to swap, the matrix might be singular
+			if !rowSwapped {
+				return nil, nil, p, rowSwaps, errors.New("cannot perform elimination, singular matrix detected")
+			}
+		}
 
 		for j := i + 1; j < rows; j++ {
 			// Calculate the factor to eliminate the current row
@@ -79,7 +108,7 @@ func Elimination(a *Arei) (*Arei, *Arei, error) {
 
 			// Subtract the scaled pivot row from the current row
 			for k := i; k < cols; k++ {
-				// Rx = Rx - (factorRx * Ri)
+				// Rx = Rx - (factor * Ri)
 				Rx_k, _ := u.Index(j, k)
 				Ri_k, _ := u.Index(i, k)
 				newValue := Rx_k - factor*Ri_k
@@ -88,8 +117,34 @@ func Elimination(a *Arei) (*Arei, *Arei, error) {
 		}
 	}
 
-	return l, u, nil
+	return l, u, p, rowSwaps, nil
 }
+
+// Determinant calculates the determinant of a matrix using Gaussian elimination
+func Determinant(a *Arei) (float64, error) {
+	_, u, _, rowSwaps, err := Elimination(a)
+	if err != nil {
+		return 0, err
+	}
+
+	// Calculate the product of the diagonal elements of U
+	det := 1.0
+	rows := u.Shape[0]
+
+	for i := 0; i < rows; i++ {
+		diagonalElement, _ := u.Index(i, i)
+		det = det * diagonalElement
+	}
+
+	// Adjust the sign of the determinant based on the number of row swaps
+	if rowSwaps%2 != 0 {
+		det = -det
+	}
+
+	return det, nil
+}
+
+// Return inverted matrix
 
 // Create function rref(A * Arei) for reduced row eliclon form of A
 // R = [I,F] I = identity matrix, F = free columns

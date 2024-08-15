@@ -140,6 +140,22 @@ func Row(a *Arei, rowIndex int) (*Arei, error) {
 	return NewArei(resultData)
 }
 
+// SwapRows swaps two rows in the Arei matrix
+func (a *Arei) SwapRows(row1, row2 int) error {
+	if len(a.Shape) != 2 {
+		return errors.New("swapRows can only be used on 2D matrices")
+	}
+
+	cols := a.Shape[1]
+	for col := 0; col < cols; col++ {
+		// Swap elements in row1 and row2 for all columns
+		temp := a.Data[row1*cols+col]
+		a.Data[row1*cols+col] = a.Data[row2*cols+col]
+		a.Data[row2*cols+col] = temp
+	}
+	return nil
+}
+
 // Column returns a specified column, by index, of an aeri as a 1D aeri
 func Column(a *Arei, colIndex int) (*Arei, error) {
 	// 1D areis cannot be searched by row
