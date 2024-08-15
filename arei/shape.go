@@ -7,7 +7,7 @@ import (
 
 // Functions to create special kind of matrixes
 
-// Ns creates a Arei of n value based on the provided shape. Defaults to 0 if no value given
+// Ns creates an Arei of n value based on the provided shape. Defaults to 0 if no value given
 func Ns(shape []int, n ...float64) (*Arei, error) {
 	if len(shape) == 0 {
 		return nil, errors.New("shape cannot be empty")

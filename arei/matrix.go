@@ -54,9 +54,6 @@ func Elimination(a *Arei) (*Arei, *Arei, error) {
 	}
 
 	rows, cols := u.Shape[0], u.Shape[1]
-	if rows > cols {
-		return nil, nil, errors.New("cannot perform elimination on a tall matrix")
-	}
 
 	// Initialize L as an identity matrix
 	l, err := Identity(u.Shape)
@@ -68,9 +65,9 @@ func Elimination(a *Arei) (*Arei, *Arei, error) {
 	for i := 0; i < rows-1; i++ {
 		// Pivot element
 		pivot, _ := u.Index(i, i)
-		if pivot == 0 {
-			return nil, nil, errors.New("pivot is zero, cannot eliminate")
-		}
+		// if pivot == 0 {
+		// 	return nil, nil, errors.New("pivot is zero, cannot eliminate")
+		// }
 
 		for j := i + 1; j < rows; j++ {
 			// Calculate the factor to eliminate the current row
@@ -93,3 +90,7 @@ func Elimination(a *Arei) (*Arei, *Arei, error) {
 
 	return l, u, nil
 }
+
+// Create function rref(A * Arei) for reduced row eliclon form of A
+// R = [I,F] I = identity matrix, F = free columns
+//	   [0,0]
