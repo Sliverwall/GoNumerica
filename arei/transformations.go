@@ -1,6 +1,9 @@
 package arei
 
-import "math"
+import (
+	"errors"
+	"math"
+)
 
 // Transformations take an existing Arei and apply a transformation to create a new Arei
 
@@ -65,8 +68,12 @@ func MultiT(a *Arei, x float64) *Arei {
 }
 
 // DivT takes a given x then multiplies each element of the matrix by x.
-func DivT(a *Arei, x float64) *Arei {
+func DivT(a *Arei, x float64) (*Arei, error) {
 
+	// Handle x = 0
+	if x == 0 {
+		return nil, errors.New("x cannot be 0")
+	}
 	resultData := make([]float64, len(a.Data))
 
 	for i := range a.Data {
@@ -76,5 +83,5 @@ func DivT(a *Arei, x float64) *Arei {
 	return &Arei{
 		Shape: a.Shape,
 		Data:  resultData,
-	}
+	}, nil
 }

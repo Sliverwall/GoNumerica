@@ -187,3 +187,34 @@ func Cofactor(a *Arei) (*Arei, error) {
 		Data:  cofactorData,
 	}, nil
 }
+
+// Inverse takes a 2D arei and returns its inverse, if possible
+func Inverse(a *Arei) (*Arei, error) {
+	// A^-1 = 1/|A| * CT
+
+	// Get the determinant of a
+	det, err := Determinant(a)
+	if err != nil {
+		return nil, err
+	}
+
+	// Check if determinant is 0
+	if det == 0 {
+		return nil, errors.New("arei cannot be inverted due to determinant being 0")
+	}
+	// Get the cofactor of a
+	c, err := Cofactor(a)
+	if err != nil {
+		return nil, err
+	}
+
+	// Tranpose cofactor
+	c.Transpose()
+
+	// Multiply each element of the transposed cofactor by 1/determinant of a
+	inverse := MultiT(c, 1/det)
+
+	// Return inverse
+	return inverse, nil
+
+}
