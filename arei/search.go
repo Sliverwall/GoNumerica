@@ -2,6 +2,7 @@ package arei
 
 import (
 	"errors"
+	"fmt"
 	"math"
 )
 
@@ -156,6 +157,37 @@ func (a *Arei) SwapRows(row1, row2 int) error {
 	return nil
 }
 
+// RemoveRow removes the specified row from the Arei and returns a new Arei without that row.
+func RemoveRow(a *Arei, rowIndex int) (*Arei, error) {
+	// Ensure that a is a 2D matrix
+	if len(a.Shape) != 2 {
+		return nil, errors.New("arei must be a 2D matrix")
+	}
+
+	rows, cols := a.Shape[0], a.Shape[1]
+
+	// Check if rowIndex is out of bounds
+	if rowIndex < 0 || rowIndex >= rows {
+		return nil, fmt.Errorf("row index %d is out of bounds", rowIndex)
+	}
+
+	// Create a new data slice for the result
+	newData := make([]float64, 0, (rows-1)*cols)
+
+	// Copy all rows except the row at rowIndex
+	for i := 0; i < rows; i++ {
+		if i != rowIndex {
+			newData = append(newData, a.Data[i*cols:(i+1)*cols]...)
+		}
+	}
+
+	// Return the new Arei with one fewer row
+	return &Arei{
+		Shape: []int{rows - 1, cols},
+		Data:  newData,
+	}, nil
+}
+
 // Column returns a specified column, by index, of an aeri as a 1D aeri
 func Column(a *Arei, colIndex int) (*Arei, error) {
 	// 1D areis cannot be searched by row
@@ -180,4 +212,35 @@ func Column(a *Arei, colIndex int) (*Arei, error) {
 		resultData[i] = value
 	}
 	return NewArei(resultData)
+}
+
+// RemoveColumn removes the specified column from the Arei and returns a new Arei without that column.
+func RemoveColumn(a *Arei, colIndex int) (*Arei, error) {
+	// Ensure that a is a 2D matrix
+	if len(a.Shape) != 2 {
+		return nil, errors.New("arei must be a 2D matrix")
+	}
+
+	rows, cols := a.Shape[0], a.Shape[1]
+
+	// Check if colIndex is out of bounds
+	if colIndex < 0 || colIndex >= cols {
+		return nil, fmt.Errorf("column index %d is out of bounds", colIndex)
+	}
+
+	// Create a new data slice for the result
+	newData := make([]float64, 0, rows*(cols-1))
+
+	// Copy all columns except the column at colIndex
+	for i := 0; i < rows; i++ {
+		start := i * cols
+		newData = append(newData, a.Data[start:start+colIndex]...)
+		newData = append(newData, a.Data[start+colIndex+1:start+cols]...)
+	}
+
+	// Return the new Arei with one fewer column
+	return &Arei{
+		Shape: []int{rows, cols - 1},
+		Data:  newData,
+	}, nil
 }

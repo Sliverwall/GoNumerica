@@ -3,6 +3,7 @@ package arei
 import (
 	"errors"
 	"fmt"
+	"math"
 )
 
 // MatrixProduct performs matrix multiplication of two Arei representing matrices.
@@ -144,8 +145,45 @@ func Determinant(a *Arei) (float64, error) {
 	return det, nil
 }
 
-// Return inverted matrix
+// Cofactor returns the cofactor matrix of a given matrix
+func Cofactor(a *Arei) (*Arei, error) {
+	// Check if the input is a 2D Arei
+	if len(a.Shape) != 2 {
+		return nil, errors.New("arei must be a 2D matrix")
+	}
 
-// Create function rref(A * Arei) for reduced row eliclon form of A
-// R = [I,F] I = identity matrix, F = free columns
-//	   [0,0]
+	m, n := a.Shape[0], a.Shape[1]
+
+	// Initialize a new Arei for the cofactor matrix
+	cofactorData := make([]float64, m*n)
+
+	for i := 0; i < m; i++ {
+		for j := 0; j < n; j++ {
+			// Compute the minor by removing row i and column j
+			minor, err := RemoveRow(a, i)
+			if err != nil {
+				return nil, err
+			}
+			minor, err = RemoveColumn(minor, j)
+			if err != nil {
+				return nil, err
+			}
+
+			// Compute the determinant of the minor matrix
+			det, err := Determinant(minor)
+			if err != nil {
+				return nil, err
+			}
+
+			// Calculate the cofactor value
+			sign := math.Pow(-1, float64(i+j))
+			cofactorData[i*n+j] = sign * det
+		}
+	}
+
+	// Return the cofactor matrix
+	return &Arei{
+		Shape: []int{m, n},
+		Data:  cofactorData,
+	}, nil
+}
