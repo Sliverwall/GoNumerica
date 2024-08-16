@@ -41,6 +41,36 @@ func MatrixProduct(A, B *Arei) (*Arei, error) {
 	return C, nil
 }
 
+// MatrixPow computes A^n (matrix A raised to the power n)
+func MatrixPow(A *Arei, n int) (*Arei, error) {
+	// Base case: A^1 is A
+	if n == 1 {
+		return A, nil
+	}
+
+	// Recursively compute A^(n/2)
+	halfPower, err := MatrixPow(A, n/2)
+	if err != nil {
+		return nil, err
+	}
+
+	// Multiply A^(n/2) by itself
+	result, err := MatrixProduct(halfPower, halfPower)
+	if err != nil {
+		return nil, err
+	}
+
+	// If n is odd, multiply by A one more time
+	if n%2 != 0 {
+		result, err = MatrixProduct(result, A)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return result, nil
+}
+
 // Elimination performs Gaussian elimination on the given Arei and returns L, U, P, and number of row swaps
 func Elimination(a *Arei) (*Arei, *Arei, *Arei, int, error) {
 	// Check if the input is a 2D Arei

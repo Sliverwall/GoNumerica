@@ -10,16 +10,17 @@ import (
 func Test_1() {
 	// Test fib sequence
 
-	n := 20
-	fibSequence := fibSeq(n)
+	n := 10
+	fibSequence := FibSeq(n)
 	log.Println(fibSequence)
 
-	nthFib := fib(n)
+	nthFib := Fib(n)
 	log.Println("Fib int at n=", n, nthFib)
 
 	// Convert sequence into float64
 	floatFigSeq := ConvertIntArrToFloat64Arr(fibSequence)
 
+	// Create an arei matrix from the figsequence
 	figSeqArei, _ := arei.NewArei(floatFigSeq)
 	m := 4
 	figSeqArei.Reshape([]int{m, len(floatFigSeq) / m})

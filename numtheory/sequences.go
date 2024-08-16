@@ -2,8 +2,8 @@ package numtheory
 
 // Module to store functions that generate int sequences
 
-// fibSeq takes a given n, then returns
-func fibSeq(n int) []int {
+// FibSeq takes a given n, then returns
+func FibSeq(n int) []int {
 	if n <= 0 {
 		return []int{}
 	}
@@ -11,9 +11,9 @@ func fibSeq(n int) []int {
 	// Create a slice to hold the Fibonacci sequence
 	fibSequence := make([]int, n)
 
-	// Initialize the first two Fibonacci numbers
+	// Manually set seed values for index 0 and 1 as fib[0] = 1, fib[1] = 1
 	if n > 0 {
-		fibSequence[0] = 0
+		fibSequence[0] = 1
 	}
 	if n > 1 {
 		fibSequence[1] = 1
@@ -30,17 +30,17 @@ func fibSeq(n int) []int {
 }
 
 // Fib returns the nth element in a fib sequence. No intermediate array is created.
-func fib(n int) int {
-	// Manually return first two results in the fib sequence fib[0] = 0, fib[1] = 1
+func Fib(n int) int {
+	// Manually set seed values for index 0 and 1 as fib[0] = 1, fib[1] = 1
 	if n == 0 {
 		return 0
 	}
-	if n == 1 {
+	if n == 1 || n == 2 {
 		return 1
 	}
 
 	// Keep track of the value of fib[i-2] and fib[i-1] starting at i = 2
-	n0 := 0
+	n0 := 1
 	n1 := 1
 	// initialize the result variable as an int
 	var result int
