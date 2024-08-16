@@ -1,8 +1,8 @@
 package numtheory
 
 import (
-	"GoNumerica/arei"
 	"log"
+	"time"
 )
 
 // Test module
@@ -10,20 +10,11 @@ import (
 func Test_1() {
 	// Test fib sequence
 
-	n := 10
-	fibSequence := FibSeq(n)
-	log.Println(fibSequence)
-
+	n := 1000000
+	startTime := time.Now()
 	nthFib := Fib(n)
-	log.Println("Fib int at n=", n, nthFib)
+	endTime := time.Now()
 
-	// Convert sequence into float64
-	floatFigSeq := ConvertIntArrToFloat64Arr(fibSequence)
-
-	// Create an arei matrix from the figsequence
-	figSeqArei, _ := arei.NewArei(floatFigSeq)
-	m := 4
-	figSeqArei.Reshape([]int{m, len(floatFigSeq) / m})
-	figSeqArei.Frame()
-
+	exeTime := endTime.Sub(startTime)
+	log.Println("n/fibN/time", n, nthFib, exeTime)
 }
