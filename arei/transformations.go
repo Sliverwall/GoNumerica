@@ -52,7 +52,6 @@ func Sign(a *Arei) *Arei {
 }
 
 // MultiT takes a given x then multiplies each element of the matrix by x.
-// Sign creates a new arei with flipped signs on each element
 func MultiT(a *Arei, x float64) *Arei {
 
 	resultData := make([]float64, len(a.Data))

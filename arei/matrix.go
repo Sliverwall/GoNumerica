@@ -96,6 +96,8 @@ func Elimination(a *Arei) (*Arei, *Arei, *Arei, int, error) {
 			// If no row was found to swap, the matrix might be singular
 			if !rowSwapped {
 				return nil, nil, p, rowSwaps, errors.New("cannot perform elimination, singular matrix detected")
+				// Any two rows or columns are identical
+				// All elements in a row or column are zero
 			}
 		}
 
