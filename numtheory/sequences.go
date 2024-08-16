@@ -29,8 +29,22 @@ func FibSeq(n int) []int {
 	return fibSequence
 }
 
-// Fib returns the nth element in a fib sequence. No intermediate array is created.
+// FibIter returns the nth element in a fib sequence using matrix exponentiation. No intermediate array is created.
 func Fib(n int) int {
+	if n < 2 {
+		return n
+	}
+	fibMatrix := [][]int{
+		{1, 1},
+		{1, 0},
+	}
+	result := MatrixPow(fibMatrix, n-1)
+
+	return result[0][0]
+}
+
+// FibIter returns the nth element in a fib sequence using iteration techinque. No intermediate array is created.
+func FibIter(n int) int {
 	// Manually set seed values for index 0 and 1 as fib[0] = 1, fib[1] = 1
 	if n == 0 {
 		return 0

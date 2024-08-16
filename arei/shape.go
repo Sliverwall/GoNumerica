@@ -154,3 +154,16 @@ func Zeros(shape []int) (*Arei, error) {
 	zeroData := make([]float64, size)
 	return &Arei{Shape: shape, Data: zeroData}, nil
 }
+
+// FibMatrix returns the fibonacci matrix at a given n
+func FibMatrix(n int) *Arei {
+	// Get base fib matrix
+	A, _ := NewArei([][]float64{
+		{1, 1},
+		{1, 0},
+	})
+
+	nthMatrix, _ := MatrixPow(A, n)
+
+	return nthMatrix
+}

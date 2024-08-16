@@ -55,20 +55,20 @@ func MatrixPow(A *Arei, n int) (*Arei, error) {
 	}
 
 	// Multiply A^(n/2) by itself
-	result, err := MatrixProduct(halfPower, halfPower)
+	B, err := MatrixProduct(halfPower, halfPower)
 	if err != nil {
 		return nil, err
 	}
 
 	// If n is odd, multiply by A one more time
 	if n%2 != 0 {
-		result, err = MatrixProduct(result, A)
+		B, err = MatrixProduct(B, A)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	return result, nil
+	return B, nil
 }
 
 // Elimination performs Gaussian elimination on the given Arei and returns L, U, P, and number of row swaps

@@ -396,3 +396,11 @@ func Test_13() {
 	PA, _ := MatrixProduct(P, A)
 	PA.Frame()
 }
+
+func Test_14() {
+	// Test FibMatrix generator
+	n := 10
+	fibMatirx := FibMatrix(n)
+	log.Println("Fib Matrix at n=10")
+	fibMatirx.Frame()
+}
