@@ -5,10 +5,11 @@ package numtheory
 //--------------------------- FIBONACCI METHODS ---------------------------------------
 
 // Fib returns the nth element in a fib sequence using matrix exponentiation. No intermediate array is created.
-func Fib(n int) uint64 {
+func Fib(n int) int {
 	if n < 2 {
-		return uint64(n)
+		return n
 	}
+	// The fibonacci matrix where [[Fn+1,Fn],[Fn, Fn-1]]
 	fibMatrix := [][]int{
 		{1, 1},
 		{1, 0},
@@ -16,11 +17,11 @@ func Fib(n int) uint64 {
 	//the [0][0] position will be = to F(n+1)
 	result := MatrixPow(fibMatrix, n-1)
 
-	return uint64(result[0][0])
+	return result[0][0]
 }
 
 // FibIter returns the nth element in a fib sequence using iteration techinque. No intermediate array is created.
-func FibIter(n int) uint64 {
+func FibIter(n int) int {
 	// Manually set seed values for index 0 and 1 as fib[0] = 1, fib[1] = 1
 	if n == 0 {
 		return 0
@@ -30,9 +31,9 @@ func FibIter(n int) uint64 {
 	}
 
 	// Keep track of the value of fib[i-2] and fib[i-1] starting at i = 2
-	var n0, n1 uint64 = 1, 1
+	var n0, n1 int = 1, 1
 	// initialize the result variable as an int
-	var result uint64
+	var result int
 	// Start at i= 2 because first two elements solved manually
 	for i := 2; i < n; i++ {
 		// the nth result of fib sequence is the sum of the previous two elements when i >= 2
@@ -46,13 +47,13 @@ func FibIter(n int) uint64 {
 }
 
 // FibSeq takes a given n using the iter method, then returns the sequence
-func FibSeq(n int) []uint64 {
+func FibSeq(n int) []int {
 	if n <= 0 {
-		return []uint64{}
+		return []int{}
 	}
 
 	// Create a slice to hold the Fibonacci sequence
-	fibSequence := make([]uint64, n)
+	fibSequence := make([]int, n)
 
 	// Manually set seed values for index 0 and 1 as fib[0] = 1, fib[1] = 1
 	if n > 0 {

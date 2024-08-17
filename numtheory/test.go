@@ -10,11 +10,11 @@ import (
 func Test_1() {
 	// Test fib sequence
 
-	n := 1000000
+	n := 9
 	startTime := time.Now()
-	nthFib := Fib(n)
+	fibn := Fib(n)
 	endTime := time.Now()
 
 	exeTime := endTime.Sub(startTime)
-	log.Println("n/fibN/time", n, nthFib, exeTime)
+	log.Println("n/fibN/time", n, fibn, exeTime)
 }
