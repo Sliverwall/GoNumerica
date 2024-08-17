@@ -3,20 +3,24 @@ package numtheory
 // Module to store functions that generate int sequences
 
 //--------------------------- FIBONACCI METHODS ---------------------------------------
+import (
+	"math/big"
+)
 
-// Fib returns the nth element in a fib sequence using matrix exponentiation. No intermediate array is created.
-func Fib(n int) int {
+// Fib returns the nth element in a Fibonacci sequence using matrix exponentiation with big.Int.
+func Fib(n int) *big.Int {
 	if n < 2 {
-		return n
+		return big.NewInt(int64(n))
 	}
-	// The fibonacci matrix where [[Fn+1,Fn],[Fn, Fn-1]]
-	fibMatrix := [][]int{
-		{1, 1},
-		{1, 0},
-	}
-	//the [0][0] position will be = to F(n+1)
-	result := MatrixPow(fibMatrix, n-1)
 
+	// The fibonacci matrix where [[Fn+1,Fn],[Fn, Fn-1]]
+	fibMatrix := [][]*big.Int{
+		{big.NewInt(1), big.NewInt(1)},
+		{big.NewInt(1), big.NewInt(0)},
+	}
+
+	// The [0][0] position will be equal to F(n+1)
+	result := MatrixPowBig(fibMatrix, n-1)
 	return result[0][0]
 }
 
