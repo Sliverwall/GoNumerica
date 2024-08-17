@@ -50,7 +50,7 @@ func FibIter(n int) int {
 	return result
 }
 
-// FibSeq takes a given n using the iter method, then returns the sequence
+// FibSeq takes a given n then returns fibonacci sequence up to n inclusive using the iter method
 func FibSeq(n int) []int {
 	if n <= 0 {
 		return []int{}
@@ -62,6 +62,33 @@ func FibSeq(n int) []int {
 	// Manually set seed values for index 0 and 1 as fib[0] = 1, fib[1] = 1
 	if n > 0 {
 		fibSequence[0] = 1
+	}
+	if n > 1 {
+		fibSequence[1] = 1
+	}
+
+	// After i = 0 and i = 1, the ith input will be the sum of the last two elements
+	for i := 2; i < n; i++ {
+		// i = (i-1) + (i-2)
+		fibSequence[i] = fibSequence[i-1] + fibSequence[i-2]
+	}
+
+	// Return the int array of the sequence
+	return fibSequence
+}
+
+// FibSeqCustomSeed takes a given n and seed then returns fibonacci sequence up to n inclusive using the iter method with a custom seed for index 0.
+func FibSeqCustomSeed(n, seed int) []int {
+	if n <= 0 {
+		return []int{}
+	}
+
+	// Create a slice to hold the Fibonacci sequence
+	fibSequence := make([]int, n)
+
+	// Manually set seed values for index 0 and 1 as fib[0] = 1, fib[1] = 1
+	if n > 0 {
+		fibSequence[0] = seed
 	}
 	if n > 1 {
 		fibSequence[1] = 1

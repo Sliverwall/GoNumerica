@@ -10,7 +10,7 @@ import (
 func Test_1() {
 	// Test fib sequence
 
-	n := 10000000
+	n := 1000
 	startTime := time.Now()
 	fibn := Fib(n)
 	endTime := time.Now()
