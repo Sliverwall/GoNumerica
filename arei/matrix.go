@@ -251,6 +251,7 @@ func Inverse(a *Arei) (*Arei, error) {
 
 // Rank takes a given arei, then uses Elimination to return the rank
 func Rank(a *Arei) (int, error) {
+	// Dim of the column space is the rank C(A)=r
 	// Get upper trianglar of matrix
 	_, U, _, _, err := Elimination(a)
 	if err != nil {
@@ -269,7 +270,10 @@ func Rank(a *Arei) (int, error) {
 		// Loop through each column of U
 		for j := 0; j < n; j++ {
 			// Sum up the row
-			valueIJ, _ := U.Index(i, j)
+			valueIJ, err := U.Index(i, j)
+			if err != nil {
+				log.Fatal(err)
+			}
 			rowSum += int(valueIJ)
 		}
 		// After checking row i, see if rowSum is greater than 0

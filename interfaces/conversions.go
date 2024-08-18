@@ -1,6 +1,6 @@
-package numtheory
+package interfaces
 
-// Module for handling data types
+// Module for handling data type conversions
 
 // ConvertIntArrToFloat64Arr takes a given []int and returns the array casted a []float64
 func ConvertIntArrToFloat64Arr(intArr []int) []float64 {
