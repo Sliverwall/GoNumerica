@@ -1,6 +1,7 @@
 package arei
 
 import (
+	"GoNumerica/interfaces"
 	"errors"
 	"fmt"
 	"math"
@@ -13,14 +14,34 @@ type Arei struct {
 }
 
 // NewArei creates a new Arei based on the provided Data.
-func NewArei(Data interface{}) (*Arei, error) {
+func NewArei[T interfaces.NumArei](Data T) (*Arei, error) {
 	var Shape []int
 	var flatData []float64
 
-	switch v := Data.(type) {
+	switch v := any(Data).(type) {
+	case []int:
+		Shape = []int{len(v)}
+		flatData = make([]float64, len(v))
+		for i, val := range v {
+			flatData[i] = float64(val)
+		}
 	case []float64:
 		Shape = []int{len(v)}
 		flatData = v
+	case [][]int:
+		if len(v) == 0 {
+			return nil, errors.New("data cannot be empty")
+		}
+		Shape = []int{len(v), len(v[0])}
+		flatData = make([]float64, 0, Shape[0]*Shape[1])
+		for _, row := range v {
+			if len(row) != Shape[1] {
+				return nil, errors.New("all rows must have the same number of columns")
+			}
+			for _, val := range row {
+				flatData = append(flatData, float64(val))
+			}
+		}
 	case [][]float64:
 		if len(v) == 0 {
 			return nil, errors.New("data cannot be empty")

@@ -1,11 +1,11 @@
 package numtheory
 
 // Module to store functions that generate int sequences
-
-//--------------------------- FIBONACCI METHODS ---------------------------------------
 import (
 	"math/big"
 )
+
+//--------------------------- FIBONACCI METHODS ---------------------------------------
 
 // Fib returns the nth element in a Fibonacci sequence using matrix exponentiation with big.Int.
 func Fib(n int) *big.Int {
