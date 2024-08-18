@@ -3,6 +3,7 @@ package arei
 import (
 	"errors"
 	"fmt"
+	"log"
 	"math"
 )
 
@@ -125,7 +126,7 @@ func Elimination(a *Arei) (*Arei, *Arei, *Arei, int, error) {
 			}
 			// If no row was found to swap, the matrix might be singular
 			if !rowSwapped {
-				return nil, nil, p, rowSwaps, errors.New("cannot perform elimination, singular matrix detected")
+				continue
 				// Any two rows or columns are identical
 				// All elements in a row or column are zero
 			}
@@ -246,5 +247,36 @@ func Inverse(a *Arei) (*Arei, error) {
 
 	// Return inverse
 	return inverse, nil
+}
 
+// Rank takes a given arei, then uses Elimination to return the rank
+func Rank(a *Arei) (int, error) {
+	// Get upper trianglar of matrix
+	_, U, _, _, err := Elimination(a)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// get how many rows and columns U has. Dims errors handled during Elimination step.
+	m, n := U.Shape[0], U.Shape[1]
+
+	// Initialize variable for rank
+	rank := 0
+
+	// Loop through each row of U
+	for i := 0; i < m; i++ {
+		// Initialize a row sum for each row to check if it is 0
+		rowSum := 0
+		// Loop through each column of U
+		for j := 0; j < n; j++ {
+			// Sum up the row
+			valueIJ, _ := U.Index(i, j)
+			rowSum += int(valueIJ)
+		}
+		// After checking row i, see if rowSum is greater than 0
+		if rowSum > 0 {
+			rank++ // add 1 to rank if row is not 0
+		}
+
+	}
+	return rank, nil
 }
