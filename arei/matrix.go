@@ -154,10 +154,10 @@ func Elimination(a *Arei) (*Arei, *Arei, *Arei, int, error) {
 }
 
 // Determinant calculates the determinant of a matrix using Gaussian elimination
-func Determinant(a *Arei) (float64, error) {
+func Determinant(a *Arei) float64 {
 	_, u, _, rowSwaps, err := Elimination(a)
 	if err != nil {
-		return 0, err
+		return 0
 	}
 
 	// Calculate the product of the diagonal elements of U
@@ -174,7 +174,7 @@ func Determinant(a *Arei) (float64, error) {
 		det = -det
 	}
 
-	return det, nil
+	return det
 }
 
 // Cofactor returns the cofactor matrix of a given matrix
@@ -202,11 +202,12 @@ func Cofactor(a *Arei) (*Arei, error) {
 			}
 
 			// Compute the determinant of the minor matrix
-			det, err := Determinant(minor)
-			if err != nil {
-				return nil, err
-			}
+			det := Determinant(minor)
 
+			// Check if det is 0
+			if det == 0 {
+				return nil, errors.New("determinant of a minor is 0")
+			}
 			// Calculate the cofactor value
 			sign := math.Pow(-1, float64(i+j))
 			cofactorData[i*n+j] = sign * det
@@ -225,10 +226,7 @@ func Inverse(a *Arei) (*Arei, error) {
 	// A^-1 = 1/|A| * CT
 
 	// Get the determinant of a
-	det, err := Determinant(a)
-	if err != nil {
-		return nil, err
-	}
+	det := Determinant(a)
 
 	// Check if determinant is 0
 	if det == 0 {
