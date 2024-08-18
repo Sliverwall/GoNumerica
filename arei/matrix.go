@@ -154,6 +154,54 @@ func Elimination(a *Arei) (*Arei, *Arei, *Arei, int, error) {
 	return l, u, p, rowSwaps, nil
 }
 
+// Rref takes a 2d arei then returns the reduced row echelon form
+func Rref(a *Arei) (*Arei, error) {
+	// Get U from LU elimination as basis for starting rref
+	_, rref, _, _, err := Elimination(a)
+	if err != nil {
+		return nil, err
+	}
+	rows, cols := rref.Shape[0], rref.Shape[1]
+
+	// Loop over each row starting from the bottom row to the top
+	for i := rows - 1; i >= 0; i-- {
+		// Find the pivot (first non-zero element in the row)
+		var pivotCol int
+		for j := 0; j < cols; j++ {
+			value, _ := rref.Index(i, j)
+			if value != 0 {
+				pivotCol = j
+				break // Stop searching the row once pivot is found
+			}
+		}
+
+		// If the row is all zeros, skip this row
+		pivot, _ := rref.Index(i, pivotCol)
+		if pivot == 0 {
+			continue
+		}
+
+		// Normalize the pivot row so that the pivot becomes 1
+		for j := pivotCol; j < cols; j++ {
+			val, _ := rref.Index(i, j)
+			rref.SetIndex(val/pivot, i, j)
+		}
+
+		// Eliminate the entries above the pivot in the same column
+		for k := i - 1; k >= 0; k-- {
+			factor, _ := rref.Index(k, pivotCol)
+			for j := pivotCol; j < cols; j++ {
+				upperVal, _ := rref.Index(k, j)
+				lowerVal, _ := rref.Index(i, j)
+				newValue := upperVal - factor*lowerVal
+				rref.SetIndex(newValue, k, j)
+			}
+		}
+	}
+
+	return rref, nil
+}
+
 // Determinant calculates the determinant of a matrix using Gaussian elimination
 func Determinant(a *Arei) float64 {
 	_, u, _, rowSwaps, err := Elimination(a)
