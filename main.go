@@ -9,5 +9,5 @@ func main() {
 	log.Println("Hello GoNumerica")
 
 	// Print examples
-	notes.Example19()
+	notes.Example20()
 }

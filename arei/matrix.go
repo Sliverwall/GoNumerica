@@ -332,3 +332,25 @@ func Rank(a *Arei) (int, error) {
 	}
 	return rank, nil
 }
+
+// DimN takes a matrix then returns the null space dimensions
+func DimN(a *Arei) (int, error) {
+	// Get the reduced row echelon for of a
+	rref, err := Rref(a)
+	if err != nil {
+		return 0, err
+	}
+
+	// Get the rank of the rref
+	rank, err := Rank(rref)
+	if err != nil {
+		return 0, err
+	}
+
+	// Get column count
+	m := a.Shape[1]
+
+	// Solve for DimN(A) = m - r
+	dimension := m - rank
+	return dimension, nil
+}

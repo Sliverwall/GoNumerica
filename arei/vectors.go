@@ -9,6 +9,11 @@ func DotProduct(a, b *Arei) (*Arei, error) {
 		return nil, errors.New("both Areis must be 1D for dot product")
 	}
 
+	// Check if data is present in both Areis
+	if len(a.Data) == 0 || len(b.Data) == 0 {
+		return nil, errors.New("input Areis cannot be empty")
+	}
+
 	lengthA, lengthB := a.Shape[0], b.Shape[0]
 
 	// Initialize result Arei
