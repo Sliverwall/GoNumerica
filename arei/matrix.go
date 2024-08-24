@@ -3,7 +3,6 @@ package arei
 import (
 	"errors"
 	"fmt"
-	"log"
 	"math"
 )
 
@@ -299,37 +298,40 @@ func Inverse(a *Arei) (*Arei, error) {
 
 // Rank takes a given arei, then uses Elimination to return the rank
 func Rank(a *Arei) (int, error) {
-	// Dim of the column space is the rank C(A)=r
-	// Get upper trianglar of matrix
+	// Get upper triangular form of matrix using Elimination
 	_, U, _, _, err := Elimination(a)
 	if err != nil {
-		log.Fatal(err)
+		return 0, err
 	}
-	// get how many rows and columns U has. Dims errors handled during Elimination step.
+
 	m, n := U.Shape[0], U.Shape[1]
 
 	// Initialize variable for rank
 	rank := 0
+	// Set tolerance level to handle floating point errors
+	tolerance := 1e-9
 
 	// Loop through each row of U
 	for i := 0; i < m; i++ {
-		// Initialize a row sum for each row to check if it is 0
-		rowSum := 0
-		// Loop through each column of U
+		// Check if the row has any non-zero element
+		rowIsNonZero := false
 		for j := 0; j < n; j++ {
-			// Sum up the row
 			valueIJ, err := U.Index(i, j)
 			if err != nil {
-				log.Fatal(err)
+				return 0, err
 			}
-			rowSum += int(valueIJ)
+			// Compare value with a small tolerance
+			if math.Abs(valueIJ) > tolerance {
+				rowIsNonZero = true
+				break
+			}
 		}
-		// After checking row i, see if rowSum is greater than 0
-		if rowSum > 0 {
-			rank++ // add 1 to rank if row is not 0
+		// If the row has any non-zero element, count it towards the rank
+		if rowIsNonZero {
+			rank++
 		}
-
 	}
+
 	return rank, nil
 }
 
