@@ -1,19 +1,23 @@
 package stats
 
-import "GoNumerica/interfaces"
+import (
+	"GoNumerica/arei"
+)
 
 // module for basic math functions
 
-func mean[T interfaces.NumArray](X T) float64 {
+// Mean takes an Arei and a feature index then return the mean of the selected feature
+func Mean(X *arei.Arei, featureIndex int) float64 {
 	// init sum
 	sum := 0.0
 
-	// Get length of dataset
-	n := len(X)
+	// Get length of the feature
+	n := X.Shape[0]
 
-	// Get the sum of the dataset
+	// Get the sum of the feature
 	for i := 0; i < n; i++ {
-		sum += interfaces.Index(X, i).(float64)
+		value, _ := X.Index(i, featureIndex)
+		sum += value
 	}
 
 	// Return sum over length
