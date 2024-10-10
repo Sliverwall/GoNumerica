@@ -20,13 +20,13 @@ func NewArei[T interfaces.NumArei](Data T) (*Arei, error) {
 
 	switch v := any(Data).(type) {
 	case []int:
-		Shape = []int{len(v)}
+		Shape = []int{len(v), 1}
 		flatData = make([]float64, len(v))
 		for i, val := range v {
 			flatData[i] = float64(val)
 		}
 	case []float64:
-		Shape = []int{len(v)}
+		Shape = []int{len(v), 1}
 		flatData = v
 	case [][]int:
 		if len(v) == 0 {

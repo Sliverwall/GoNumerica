@@ -123,106 +123,166 @@ func Compare(a *Arei, x float64) *Arei {
 	}
 }
 
-// ArgMax takes an arei, then returns an arei with 1 in the row-column position with the highest value for that column.
-func ArgMax(a *Arei) *Arei {
-	resultData := make([]float64, len(a.Data))
+// ArgMax takes an arei, then returns an arei with 1 in the row-column position with the highest value for that column. direction > 0 to set along row, and <= 0 to set along column
+func ArgMax(a *Arei, direction int) *Arei {
+	// Init A with same shape as  a
+	argMaxArei, _ := Zeros(a.Shape)
 
-	// Check if vector or not
-	cols := 1
-	if len(a.Shape) != 1 {
-		cols = a.Shape[1]
-	}
 	// Init slice to store data on which row-column should be 1
-	argmaxMap := make([]int, cols)
-	// Loop through each column
-	for j := range cols {
-		// Init values to keep track of max value and the row
-		maxI := 0
-		maxValue := math.Inf(-1)
-		// Loop through each row
-		for i := range a.Data {
+	argmaxMap := make([]int, a.Shape[1])
 
-			// Check is record is greater than current max value
-			element, _ := a.Index(i, j)
-			if element > maxValue {
-				// Set new maxI and new maxValue if so
-				maxValue = element
-				maxI = i
+	// If direction > 0,  get argmax along row, otherwise along column
+
+	if direction > 0 {
+		// Loop through each column
+		for i := range a.Shape[0] {
+			// Init values to keep track of max value and the row
+			maxJ := 0
+			maxValue := math.Inf(-1)
+			// Loop through each row
+			for j := range a.Shape[1] {
+
+				// Check is record is greater than current max value
+				element, _ := a.Index(i, j)
+				if element > maxValue {
+					// Set new maxI and new maxValue if so
+					maxValue = element
+					maxJ = j
+				}
 			}
+			// After looping thorugh all rows in column, store row in map. Index of map denotes j
+			argmaxMap[i] = maxJ
 		}
-		// After looping thorugh all rows in column, store row in map. Index of map denotes j
-		argmaxMap[j] = maxI
+	} else {
+		// Loop through each column
+		for j := range a.Shape[1] {
+			// Init values to keep track of max value and the row
+			maxI := 0
+			maxValue := math.Inf(-1)
+			// Loop through each row
+			for i := range a.Shape[0] {
+
+				// Check is record is greater than current max value
+				element, _ := a.Index(i, j)
+				if element > maxValue {
+					// Set new maxI and new maxValue if so
+					maxValue = element
+					maxI = i
+				}
+			}
+			// After looping thorugh all rows in column, store row in map. Index of map denotes j
+			argmaxMap[j] = maxI
+		}
 	}
 
 	// Loop through each row
-	for i := range a.Data {
+	for i := range a.Shape[0] {
 		// Loop through each column
-		for j := range cols {
-			// Set result data using softmax
-			iValue := argmaxMap[j]
+		for j := range a.Shape[1] {
 
-			// If current i matches value stored in argmaxMap, then current element is max value for the column, so set value to 1, otherwise 0.
-			if iValue == i {
-				resultData[i*cols+j] = 1
+			if direction > 0 {
+				// Set result data using softmax
+				jValue := argmaxMap[i]
+
+				// If current i matches value stored in argmaxMap, then current element is max value for the column, so set value to 1, otherwise 0.
+				if jValue == j {
+					argMaxArei.SetIndex(1, i, j)
+				}
 			} else {
-				resultData[i*cols+j] = 0
+
+				// Set result data using softmax
+				iValue := argmaxMap[j]
+
+				// If current i matches value stored in argmaxMap, then current element is max value for the column, so set value to 1, otherwise 0.
+				if iValue == i {
+					argMaxArei.SetIndex(1, i, j)
+				}
 			}
 
 		}
 	}
 
-	return &Arei{
-		Shape: a.Shape,
-		Data:  resultData,
-	}
+	return argMaxArei
 }
 
 // SoftMax takes an arei, then returns an arei with with the softmax for each element in comparsion to the sum of the elemnet's column softmax
-func SoftMax(a *Arei) *Arei {
-	resultData := make([]float64, len(a.Data))
+func SoftMax(a *Arei, direction int) *Arei {
 
+	// Init A with same shape as  a
+	softMaxArei, _ := Zeros(a.Shape)
 	// Check if vector or not
-	cols := 1
-	if len(a.Shape) != 1 {
-		cols = a.Shape[1]
-	}
+	cols := a.Shape[1]
 	// Init slice to store data on which row-column should be 1
 	softmaxMap := make([]float64, cols)
-	// Loop through each column
-	for j := range cols {
-		// Init values to keep the sum of the softmax for the column
-		sum := 0.0
 
-		// Loop through each row
-		for i := range a.Data {
+	if direction > 0 {
+		// Loop through each column
+		for i := range a.Shape[0] {
+			// Init values to keep the sum of the softmax for the column
+			sum := 0.0
 
-			// Get the element
-			element, _ := a.Index(i, j)
-			// Add e^element to sum variable
-			sum += math.Exp(element)
+			// Loop through each row
+			for j := range cols {
+
+				// Get the element
+				element, _ := a.Index(i, j)
+				// Add e^element to sum variable
+				sum += math.Exp(element)
+			}
+			// After looping thorugh all columns in row, store row in map. Index of map denotes i
+			softmaxMap[i] = sum
 		}
-		// After looping thorugh all rows in column, store row in map. Index of map denotes j
-		softmaxMap[j] = sum
-	}
 
-	// Loop through each row
-	for i := range a.Data {
+		// Loop through each col
+		for j := range cols {
+			// Loop through each row
+			for i := range a.Shape[0] {
+				// Set result data using softmax
+				element, _ := a.Index(i, j)
+				softMaxSum := softmaxMap[i]
+				eBaseElement := math.Exp(element)
+				softMaxElement := eBaseElement / softMaxSum
+
+				// Set softMaxElement to resultData
+				softMaxArei.SetIndex(softMaxElement, i, j)
+
+			}
+		}
+	} else {
+
 		// Loop through each column
 		for j := range cols {
-			// Set result data using softmax
-			element, _ := a.Index(i, j)
-			softMaxSum := softmaxMap[j]
-			eBaseElement := math.Exp(element)
-			softMaxElement := eBaseElement / softMaxSum
+			// Init values to keep the sum of the softmax for the column
+			sum := 0.0
 
-			// Set softMaxElement to resultData
-			resultData[i*cols+j] = softMaxElement
+			// Loop through each row
+			for i := range a.Shape[0] {
 
+				// Get the element
+				element, _ := a.Index(i, j)
+				// Add e^element to sum variable
+				sum += math.Exp(element)
+			}
+			// After looping thorugh all rows in column, store row in map. Index of map denotes j
+			softmaxMap[j] = sum
+		}
+
+		// Loop through each row
+		for i := range a.Shape[0] {
+			// Loop through each column
+			for j := range cols {
+				// Set result data using softmax
+				element, _ := a.Index(i, j)
+				softMaxSum := softmaxMap[j]
+				eBaseElement := math.Exp(element)
+				softMaxElement := eBaseElement / softMaxSum
+
+				// Set softMaxElement to resultData
+				softMaxArei.SetIndex(softMaxElement, i, j)
+
+			}
 		}
 	}
 
-	return &Arei{
-		Shape: a.Shape,
-		Data:  resultData,
-	}
+	return softMaxArei
 }

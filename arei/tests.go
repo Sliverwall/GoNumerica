@@ -404,3 +404,40 @@ func Test_14() {
 	log.Println("Fib Matrix at n=10")
 	fibMatirx.Frame()
 }
+
+func Test_15() {
+	// Test argmax and softmax functions
+
+	// Try with vector first
+
+	v1, _ := NewArei([]int{
+		1, 2, 3, 4,
+	})
+
+	v1_argmax := ArgMax(v1, 0)
+
+	v1_softmax := SoftMax(v1, 0)
+
+	log.Println("V1: ", v1)
+	log.Println("Argmax: ", v1_argmax)
+	log.Println("Softmax: ", v1_softmax, " Sum =>", SumElements(v1_softmax))
+
+	// Try with matrix now
+
+	v2, _ := NewArei([][]int{
+		{1, 4, 3},
+		{1, 5, 4},
+		{4, 3, 2},
+	})
+
+	// direction = 0 for across column, 1 for across row
+	v2_argmax := ArgMax(v2, 1)
+
+	v2_softmax := SoftMax(v2, 1)
+
+	log.Println("V2: ", v2)
+	log.Println("Argmax: ")
+	v2_argmax.Frame()
+	log.Println("Softmax: ")
+	v2_softmax.Frame()
+}

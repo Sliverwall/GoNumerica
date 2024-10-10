@@ -5,7 +5,7 @@ import "errors"
 // DotProduct calculates the dot product or scalar-vector product of two Areis.
 func DotProduct(a, b *Arei) (*Arei, error) {
 	// Check that both Areis are 1D
-	if len(a.Shape) != 1 || len(b.Shape) != 1 {
+	if a.Shape[1] != 1 || b.Shape[1] != 1 {
 		return nil, errors.New("both Areis must be 1D for dot product")
 	}
 
