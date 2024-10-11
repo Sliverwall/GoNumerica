@@ -66,7 +66,7 @@ func MultiT(a *Arei, x float64) *Arei {
 	}
 }
 
-// DivT takes a given x then multiplies each element of the matrix by x.
+// DivT takes a given x then divides each element of the matrix by x.
 func DivT(a *Arei, x float64) (*Arei, error) {
 
 	// Handle x = 0
@@ -83,6 +83,36 @@ func DivT(a *Arei, x float64) (*Arei, error) {
 		Shape: a.Shape,
 		Data:  resultData,
 	}, nil
+}
+
+// AddT takes a given x then adds each element of the matrix by x.
+func AddT(a *Arei, x float64) *Arei {
+
+	resultData := make([]float64, len(a.Data))
+
+	for i := range a.Data {
+		resultData[i] = a.Data[i] + x
+	}
+
+	return &Arei{
+		Shape: a.Shape,
+		Data:  resultData,
+	}
+}
+
+// SubT takes a given x then subtracts each element of the matrix by x.
+func SubT(a *Arei, x float64) *Arei {
+
+	resultData := make([]float64, len(a.Data))
+
+	for i := range a.Data {
+		resultData[i] = a.Data[i] - x
+	}
+
+	return &Arei{
+		Shape: a.Shape,
+		Data:  resultData,
+	}
 }
 
 // Maximum takes a given x then compares it to each element in matrix arei a. If x is > ai, x, otherwise ai.
@@ -184,7 +214,7 @@ func ArgMax(a *Arei, direction int) *Arei {
 				// Set result data using softmax
 				jValue := argmaxMap[i]
 
-				// If current i matches value stored in argmaxMap, then current element is max value for the column, so set value to 1, otherwise 0.
+				// If current j matches value stored in argmaxMap, then current element is max value for the column, so set value to 1, otherwise 0.
 				if jValue == j {
 					argMaxArei.SetIndex(1, i, j)
 				}
@@ -210,11 +240,10 @@ func SoftMax(a *Arei, direction int) *Arei {
 
 	// Init A with same shape as  a
 	softMaxArei, _ := Zeros(a.Shape)
-	// Check if vector or not
-	cols := a.Shape[1]
 	// Init slice to store data on which row-column should be 1
-	softmaxMap := make([]float64, cols)
+	softmaxMap := make([]float64, a.Shape[1])
 
+	// Direction <= 0 to softmax across column, > 0 for across row
 	if direction > 0 {
 		// Loop through each column
 		for i := range a.Shape[0] {
@@ -222,7 +251,7 @@ func SoftMax(a *Arei, direction int) *Arei {
 			sum := 0.0
 
 			// Loop through each row
-			for j := range cols {
+			for j := range a.Shape[1] {
 
 				// Get the element
 				element, _ := a.Index(i, j)
@@ -234,7 +263,7 @@ func SoftMax(a *Arei, direction int) *Arei {
 		}
 
 		// Loop through each col
-		for j := range cols {
+		for j := range a.Shape[1] {
 			// Loop through each row
 			for i := range a.Shape[0] {
 				// Set result data using softmax
@@ -251,7 +280,7 @@ func SoftMax(a *Arei, direction int) *Arei {
 	} else {
 
 		// Loop through each column
-		for j := range cols {
+		for j := range a.Shape[1] {
 			// Init values to keep the sum of the softmax for the column
 			sum := 0.0
 
@@ -270,7 +299,7 @@ func SoftMax(a *Arei, direction int) *Arei {
 		// Loop through each row
 		for i := range a.Shape[0] {
 			// Loop through each column
-			for j := range cols {
+			for j := range a.Shape[1] {
 				// Set result data using softmax
 				element, _ := a.Index(i, j)
 				softMaxSum := softmaxMap[j]

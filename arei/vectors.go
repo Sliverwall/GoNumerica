@@ -37,7 +37,7 @@ func DotProduct(a, b *Arei) (*Arei, error) {
 		for i := 0; i < lengthA; i++ {
 			result.Data[i] = a.Data[i] * b.Data[0]
 		}
-	} else if lengthA == lengthB {
+	} else if lengthA == 1 && lengthB == 1 {
 		// Vector-vector dot product
 		sum := 0.0
 		for i := 0; i < lengthA; i++ {

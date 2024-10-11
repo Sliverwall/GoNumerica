@@ -418,8 +418,10 @@ func Test_15() {
 
 	v1_softmax := SoftMax(v1, 0)
 
-	log.Println("V1: ", v1)
-	log.Println("Argmax: ", v1_argmax)
+	log.Println("V1: ")
+	v1.Frame()
+	log.Println("Argmax: ")
+	v1_argmax.Frame()
 	log.Println("Softmax: ", v1_softmax, " Sum =>", SumElements(v1_softmax))
 
 	// Try with matrix now
@@ -431,11 +433,12 @@ func Test_15() {
 	})
 
 	// direction = 0 for across column, 1 for across row
-	v2_argmax := ArgMax(v2, 1)
+	v2_argmax := ArgMax(v2, 0)
 
-	v2_softmax := SoftMax(v2, 1)
+	v2_softmax := SoftMax(v2, 0)
 
-	log.Println("V2: ", v2)
+	log.Println("V2: ")
+	v2.Frame()
 	log.Println("Argmax: ")
 	v2_argmax.Frame()
 	log.Println("Softmax: ")

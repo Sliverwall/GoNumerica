@@ -4,6 +4,7 @@ import (
 	"GoNumerica/interfaces"
 	"errors"
 	"fmt"
+	"log"
 	"math"
 )
 
@@ -163,19 +164,18 @@ func (a *Arei) Transpose() {
 
 }
 
-// CopyTranspose returns a transposed copy of the arei
-func (a *Arei) CopyTranpose() (*Arei, error) {
+// T returns a transposed copy of the arei
+func (a *Arei) T() *Arei {
 	// Create copy of input as to not affect inputed arei
 	at, err := a.Copy()
 	if err != nil {
-		return nil, errors.New("failed to create copy of arei")
+		log.Fatal(err)
 	}
-
 	// Tranpose copy of copied arei
 	at.Transpose()
 
 	// return transposed copy
-	return at, nil
+	return at
 }
 
 // Flatten takes an Arei and forces it to be 1xN
