@@ -66,14 +66,16 @@ func (nn *NeuralNet) backwardProp(yHat, y *arei.Arei) {
 			// If output layer, use cross entropy since softmax is used
 			// Step 1
 			layer.CgActivations = layer.CrossEntropy(yHat, y)
-
-			// Step 2
-			layer.CgWeights = leftLayer.Activations.T().Dot(layer.CgActivations)
 		} else {
 			// Else if not use the deriv of the activation function
 			rightLayer := nn.LayerMap[i+1]
-			layer.CgActivations = rightLayer.CgActivations.Dot(rightLayer.Weights.T())
+			// Backprop the error to the hidden layers
+			derivZ := layer.DerivActivationFunction(layer.Outputs)
+			// Do element-wise multiplication of derivZ and propgated error
+			layer.CgActivations, _ = arei.Multi(rightLayer.CgActivations.Dot(rightLayer.Weights.T()), derivZ)
 		}
-
+		// Step 2 cost gradients for weights and biases
+		layer.CgWeights = leftLayer.Activations.T().Dot(layer.CgActivations)
+		layer.CgBiases = arei.RowWiseSum(layer.CgActivations)
 	}
 }
