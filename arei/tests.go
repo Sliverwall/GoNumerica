@@ -179,12 +179,12 @@ func Test_7() {
 	log.Println("Matrix A with Exp applied", A_E)
 
 	// Test Max on A. Result should be 3
-	maxA, _ := A.Max()
+	maxA := A.Max()
 
 	log.Println("Max element in Matrix A:", maxA)
 
 	// Test Min on A. Result should b -1
-	minA, _ := A.Min()
+	minA := A.Min()
 
 	log.Println("Min element in Matrix A:", minA)
 }
@@ -443,4 +443,36 @@ func Test_15() {
 	v2_argmax.Frame()
 	log.Println("Softmax: ")
 	v2_softmax.Frame()
+}
+
+func Test_16() {
+	// Test functions needed for NN forward prop
+	// Input is 2x1
+	inputData := [][]float64{
+		{0.5},
+		{0.2},
+	}
+	input, _ := NewArei(inputData)
+
+	// layer is 3x2. 3 for 3 neurons, 2 for 2 connections from input
+	weightData := [][]float64{
+		{0.2, 0.3},
+		{0.2, 0.5},
+		{0.12, 0.3},
+	}
+	weights, _ := NewArei(weightData)
+
+	// Bias is 3x1. 3 for neurons, and 1 always
+	biasData := [][]float64{
+		{0.3},
+		{0.4},
+		{0.3},
+	}
+
+	// This equals output = wi.dot(input) + bias from numpy
+	bias, _ := NewArei(biasData)
+	w, _ := MatrixProduct(weights, input)
+	output, _ := Sum(w, bias)
+
+	output.Frame()
 }

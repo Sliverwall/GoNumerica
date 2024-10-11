@@ -26,9 +26,9 @@ type Layer struct {
 
 // Make enum to keep track of types of layers
 const (
-	inputLayer = iota
-	hiddenLayer
-	outputLayer
+	InputLayer = iota
+	HiddenLayer
+	OutputLayer
 )
 
 // --------------Init Methods-------------------------//
@@ -55,27 +55,28 @@ func NewLayer(shape []int, activationFunction string, layerType int) *Layer {
 	}
 }
 
-// BuildLayers takes in a 2d array of shapes and 1d array of activationFunctions to build a LayerMap for neural net structure.
+// BuildLayers takes in a ks2d array of shapes and 1d array of activationFunctions to build a LayerMap for neural net structure.
 func BuildLayers(shapes [][]int, activationFunctions []string) []*Layer {
 	// Init return layerMap to fit shapes height
-	layerMap := make([]*Layer, len(shapes[0]))
+	numLayers := len(activationFunctions)
+	layerMap := make([]*Layer, numLayers)
 
 	// Declare layerType since it inits in switch statement
 	var layerType int
 	// Loop through each row
-	for i := range len(shapes[0]) {
+	for i := range numLayers {
 		// use switch case to init layer type
 		switch i {
 		// First layer should be input type
 		case 0:
-			layerType = inputLayer
+			layerType = InputLayer
 		// Last layer should be an output
-		case len(shapes[0]) - 1:
-			layerType = outputLayer
+		case numLayers - 1:
+			layerType = OutputLayer
 
 		// Otherwise hidden
 		default:
-			layerType = hiddenLayer
+			layerType = HiddenLayer
 		}
 
 		// Should be 2 columns: 0th for row dimensions and 1th for column dimensions
@@ -103,4 +104,19 @@ func (l *Layer) DerivReLU(a *arei.Arei) *arei.Arei {
 	derivActivatedL := arei.Compare(a, 0)
 
 	return derivActivatedL
+}
+
+// Activate uses a layer's activation type to determine which element-wise activation function to apply to z
+func (l *Layer) Activate(z *arei.Arei) *arei.Arei {
+
+	var a *arei.Arei
+	switch l.ActivationFunction {
+	case "relu":
+		// Element-wise function. Checks if element > 0, element, otherwise 0
+		a = arei.Maximum(z, 0)
+	case "softmax":
+		a = arei.SoftMax(z, 0)
+	}
+	// Return activated arei
+	return a
 }

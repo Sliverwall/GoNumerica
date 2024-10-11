@@ -167,10 +167,7 @@ func (a *Arei) Transpose() {
 // T returns a transposed copy of the arei
 func (a *Arei) T() *Arei {
 	// Create copy of input as to not affect inputed arei
-	at, err := a.Copy()
-	if err != nil {
-		log.Fatal(err)
-	}
+	at := a.Copy()
 	// Tranpose copy of copied arei
 	at.Transpose()
 
@@ -271,7 +268,7 @@ func (a *Arei) SetIndex(value float64, indices ...int) error {
 }
 
 // Max finds the max element in an Arei
-func (a *Arei) Max() (float64, error) {
+func (a *Arei) Max() float64 {
 
 	var result float64 = math.Inf(-1)
 	for i := range a.Data {
@@ -279,11 +276,11 @@ func (a *Arei) Max() (float64, error) {
 			result = a.Data[i]
 		}
 	}
-	return result, nil
+	return result
 }
 
 // Min finds the min element in an Arei
-func (a *Arei) Min() (float64, error) {
+func (a *Arei) Min() float64 {
 
 	var result float64 = math.Inf(1)
 	for i := range a.Data {
@@ -291,15 +288,11 @@ func (a *Arei) Min() (float64, error) {
 			result = a.Data[i]
 		}
 	}
-	return result, nil
+	return result
 }
 
 // Copy creates a new arei with same shape and values as input
-func (a *Arei) Copy() (*Arei, error) {
-	if len(a.Shape) == 0 {
-		return nil, errors.New("shape cannot be empty")
-	}
-
+func (a *Arei) Copy() *Arei {
 	// Create a new slice for the data to ensure it's not shared
 	dataCopy := make([]float64, len(a.Data))
 	copy(dataCopy, a.Data)
@@ -311,5 +304,16 @@ func (a *Arei) Copy() (*Arei, error) {
 	return &Arei{
 		Shape: shapeCopy,
 		Data:  dataCopy,
-	}, nil
+	}
+}
+
+// Dot returns the dot product of a and b
+func (a *Arei) Dot(b *Arei) *Arei {
+
+	c, err := MatrixProduct(a, b)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return c
+
 }

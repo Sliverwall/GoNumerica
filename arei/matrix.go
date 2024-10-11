@@ -79,11 +79,7 @@ func Elimination(a *Arei) (*Arei, *Arei, *Arei, int, error) {
 	}
 
 	// Create a copy of the input Arei
-	u, err := a.Copy()
-	if err != nil {
-		return nil, nil, nil, 0, fmt.Errorf("failed to copy arei: %w", err)
-	}
-
+	u := a.Copy()
 	rows, cols := u.Shape[0], u.Shape[1]
 
 	// Initialize L and P as identity matrices
