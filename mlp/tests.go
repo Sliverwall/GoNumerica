@@ -6,6 +6,7 @@ func Test_1() {
 	// Test building a layer
 
 	shapes := [][]int{
+		// Column 1 = number of neruons, column 2 = number of connections (1 connection per neuron in previous layer)
 		{10, 1},  //input layer
 		{20, 10}, //hidden layer-> 20 neurons connecting to 10 input layers
 		{20, 20},

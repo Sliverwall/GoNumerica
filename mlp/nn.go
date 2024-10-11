@@ -46,7 +46,34 @@ func (nn *NeuralNet) forwardProp() {
 		if err != nil {
 			log.Fatal(err)
 		}
+		// Use layer's activation function to set layer's activation matrix
+		layer.Activations = layer.Activate(layer.Outputs)
 
 	}
+}
 
+// backwardProp travels from output layer until the last hidden layer to calculate all needed cost gradients
+func (nn *NeuralNet) backwardProp(yHat, y *arei.Arei) {
+	numLayer := len(nn.LayerMap)
+
+	// Start from last layer, then move backwards until last layer before input
+	for i := (numLayer - 1); i > 0; i-- {
+		layer := nn.LayerMap[i]
+		leftLayer := nn.LayerMap[i-1]
+
+		// Check layer type
+		if layer.LayerType == OutputLayer {
+			// If output layer, use cross entropy since softmax is used
+			// Step 1
+			layer.CgActivations = layer.CrossEntropy(yHat, y)
+
+			// Step 2
+			layer.CgWeights = leftLayer.Activations.T().Dot(layer.CgActivations)
+		} else {
+			// Else if not use the deriv of the activation function
+			rightLayer := nn.LayerMap[i+1]
+			layer.CgActivations = rightLayer.CgActivations.Dot(rightLayer.Weights.T())
+		}
+
+	}
 }

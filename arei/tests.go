@@ -475,4 +475,9 @@ func Test_16() {
 	output, _ := Sum(w, bias)
 
 	output.Frame()
+
+	// Test rowWiseSuming needed for cost gradient of bias
+	cgBias := RowWiseSum(weights)
+
+	cgBias.Frame()
 }

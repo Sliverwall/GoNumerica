@@ -2,6 +2,7 @@ package mlp
 
 import (
 	"GoNumerica/arei"
+	"log"
 )
 
 // Define layer structure for neurel net
@@ -18,8 +19,10 @@ type Layer struct {
 	Outputs     *arei.Arei
 	Activations *arei.Arei
 	// Store the cost gradient in respect to weights and biases
-	CgWeights *arei.Arei
-	CgBiases  *arei.Arei
+	CgWeights     *arei.Arei
+	CgBiases      *arei.Arei
+	CgOutputs     *arei.Arei
+	CgActivations *arei.Arei
 	// Store layer type
 	LayerType int
 }
@@ -47,11 +50,13 @@ func NewLayer(shape []int, activationFunction string, layerType int) *Layer {
 		Weights:            weights,
 		Biases:             biases,
 		// Initialize parts dependent on input as nil
-		Outputs:     nil,
-		Activations: nil,
-		CgWeights:   nil,
-		CgBiases:    nil,
-		LayerType:   layerType,
+		Outputs:       nil,
+		Activations:   nil,
+		CgWeights:     nil,
+		CgBiases:      nil,
+		CgOutputs:     nil,
+		CgActivations: nil,
+		LayerType:     layerType,
 	}
 }
 
@@ -91,21 +96,6 @@ func BuildLayers(shapes [][]int, activationFunctions []string) []*Layer {
 }
 
 // --------------Activation Functions-------------------------//
-// ReLU activation function
-func (l *Layer) ReLU(a *arei.Arei) *arei.Arei {
-	// Element-wise function. Checks if element > 0, element, otherwise 0
-	activatedL := arei.Maximum(a, 0)
-	return activatedL
-}
-
-// Deriv ReLU activation function
-func (l *Layer) DerivReLU(a *arei.Arei) *arei.Arei {
-	// Element-wise function. Checks if element > 0, 1, otherwise 0
-	derivActivatedL := arei.Compare(a, 0)
-
-	return derivActivatedL
-}
-
 // Activate uses a layer's activation type to determine which element-wise activation function to apply to z
 func (l *Layer) Activate(z *arei.Arei) *arei.Arei {
 
@@ -115,8 +105,35 @@ func (l *Layer) Activate(z *arei.Arei) *arei.Arei {
 		// Element-wise function. Checks if element > 0, element, otherwise 0
 		a = arei.Maximum(z, 0)
 	case "softmax":
+		// Softmax with setting to column operationks
 		a = arei.SoftMax(z, 0)
+	default:
+		// Throw error if no valid activation function
+		log.Fatal("layer has no activation function")
 	}
 	// Return activated arei
 	return a
+}
+
+// DerivActivationFunction uses a layer's activation type to determine which element-wise deriv activation functo to apply
+func (l *Layer) DerivActivationFunction(z *arei.Arei) *arei.Arei {
+	var a *arei.Arei
+	switch l.ActivationFunction {
+	case "relu":
+		// Element-wise function. Checks if element > 0, 1, otherwise 0
+		a = arei.Compare(a, 0)
+	default:
+		// Throw error if no valid activation function
+		log.Fatal("layer has no activation function")
+	}
+	// Return deriv activated arei
+	return a
+}
+func (l *Layer) CrossEntropy(yHat *arei.Arei, y *arei.Arei) *arei.Arei {
+	// Deriv of softmax output since only the known y has a chance to occur
+	cost, err := arei.Sub(yHat, y)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return cost
 }
