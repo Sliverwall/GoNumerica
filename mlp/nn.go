@@ -116,6 +116,15 @@ func (nn *NeuralNet) Fit(X, y *arei.Arei) {
 		nn.updateParams()
 		// Msg to confirm epoch has ended
 		log.Println("Epoch", i, "of", nn.Epochs, "End")
-
 	}
+}
+
+func (nn *NeuralNet) Predict(X *arei.Arei) *arei.Arei {
+	// Set input layer's activation as sample
+	nn.LayerMap[0].Activations = X
+	// Do forward pass
+	nn.forwardProp()
+	// Return activated output
+	outputLayer := nn.LayerMap[len(nn.LayerMap)-1]
+	return outputLayer.Activations
 }

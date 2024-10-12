@@ -122,23 +122,19 @@ func Row(a *Arei, rowIndex int) (*Arei, error) {
 		return nil, errors.New("1d aeri only have 1 row")
 	}
 
-	// Check for valid length
-	if math.Abs(float64(rowIndex)) > float64(a.Shape[0]) {
-		return nil, errors.New("index out of bounds")
-	}
-	// if negative index, count backwards
-	if rowIndex < 0 {
-		// Shape is not 0-indexed, thus negative rowIndex + shape will give backward result
-		rowIndex += a.Shape[0]
-	}
-
 	resultData := make([]float64, a.Shape[1])
 
 	for i := range a.Shape[1] {
-		value, _ := a.Index(rowIndex, i)
+		value, err := a.Index(rowIndex, i)
+		if err != nil {
+			return nil, err
+		}
 		resultData[i] = value
 	}
-	return NewArei(resultData)
+	return &Arei{
+		Shape: []int{1, a.Shape[1]},
+		Data:  resultData,
+	}, nil
 }
 
 // SwapRows swaps two rows in the Arei matrix
@@ -195,23 +191,19 @@ func Column(a *Arei, colIndex int) (*Arei, error) {
 		return nil, errors.New("1d aeri only have 1 row")
 	}
 
-	// Check for valid length
-	if math.Abs(float64(colIndex)) > float64(a.Shape[1]) {
-		return nil, errors.New("index out of bounds")
-	}
-	// if negative index, count backwards
-	if colIndex < 0 {
-		// Shape is not 0-indexed, thus negative colIndex + shape will give backward result
-		colIndex += a.Shape[0]
-	}
-
-	resultData := make([]float64, a.Shape[1])
+	resultData := make([]float64, a.Shape[0])
 
 	for i := range a.Shape[0] {
-		value, _ := a.Index(i, colIndex)
+		value, err := a.Index(i, colIndex)
+		if err != nil {
+			return nil, err
+		}
 		resultData[i] = value
 	}
-	return NewArei(resultData)
+	return &Arei{
+		Shape: []int{a.Shape[0], 1},
+		Data:  resultData,
+	}, nil
 }
 
 // RemoveColumn removes the specified column from the Arei and returns a new Arei without that column.
@@ -223,6 +215,10 @@ func RemoveColumn(a *Arei, colIndex int) (*Arei, error) {
 
 	rows, cols := a.Shape[0], a.Shape[1]
 
+	// Allow negative indexing
+	if colIndex < 0 {
+		colIndex += a.Shape[1]
+	}
 	// Check if colIndex is out of bounds
 	if colIndex < 0 || colIndex >= cols {
 		return nil, fmt.Errorf("column index %d is out of bounds", colIndex)

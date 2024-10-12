@@ -60,7 +60,7 @@ func NewLayer(shape []int, activationFunction string, layerType int) *Layer {
 	}
 }
 
-// BuildLayers takes in a ks2d array of shapes and 1d array of activationFunctions to build a LayerMap for neural net structure.
+// BuildLayers takes in a 2d array of shapes and 1d array of activationFunctions to build a LayerMap for neural net structure.
 func BuildLayers(shapes [][]int, activationFunctions []string) []*Layer {
 	// Init return layerMap to fit shapes height
 	numLayers := len(activationFunctions)

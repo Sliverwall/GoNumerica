@@ -1,16 +1,19 @@
 package mlp
 
-import "log"
+import (
+	"GoNumerica/arei"
+	"log"
+)
 
-func Test_1() {
+func Test_1(dataSet *arei.Arei) {
 	// Test building a layer
 
 	shapes := [][]int{
 		// Column 1 = number of neruons, column 2 = number of connections (1 connection per neuron in previous layer)
 		{10, 1},  //input layer
 		{20, 10}, //hidden layer-> 20 neurons connecting to 10 input layers
-		{20, 20},
-		{2, 20}, // Output layer -> 2 output neurons connecting to 20 hidden neurons
+		{20, 20}, // hidden layer -> 20 neurons connecting to 20 previous layer neurons
+		{2, 20},  // Output layer -> 2 output neurons connecting to 20 hidden neurons
 	}
 
 	activationFunctions := []string{
@@ -32,4 +35,8 @@ func Test_1() {
 
 		log.Println(i, layer.LayerType, layer.Weights.Shape, layer.ActivationFunction)
 	}
+
+	// Read in iris dataset. labels 0, 1, 2 in place of names in last column
+
+	dataSet.Frame()
 }
