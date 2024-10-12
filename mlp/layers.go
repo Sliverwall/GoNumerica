@@ -39,7 +39,7 @@ const (
 func NewLayer(shape []int, activationFunction string, layerType int) *Layer {
 
 	// Use full shape for weights. m = number of neruons, n = number of previous layer's neurons
-	weights, _ := arei.Zeros(shape)
+	weights := arei.RandArei(shape, 1, []float64{0, 1}) // Init values between 0 and 1 for weights
 	// Biases are always flat vectors. m = number of neurons, n = 1
 	biasShape := []int{shape[0], 1}
 	biases, _ := arei.Zeros(biasShape)

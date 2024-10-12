@@ -53,7 +53,7 @@ func (nn *NeuralNet) forwardProp() {
 }
 
 // backwardProp travels from output layer until the last hidden layer to calculate all needed cost gradients
-func (nn *NeuralNet) backwardProp(yHat, y *arei.Arei) {
+func (nn *NeuralNet) backwardProp(y *arei.Arei) {
 	numLayer := len(nn.LayerMap)
 
 	// Start from last layer, then move backwards until last layer before input
@@ -65,6 +65,7 @@ func (nn *NeuralNet) backwardProp(yHat, y *arei.Arei) {
 		if layer.LayerType == OutputLayer {
 			// If output layer, use cross entropy since softmax is used
 			// Step 1
+			yHat := layer.Activations
 			layer.CgActivations = layer.CrossEntropy(yHat, y)
 		} else {
 			// Else if not use the deriv of the activation function
@@ -74,8 +75,47 @@ func (nn *NeuralNet) backwardProp(yHat, y *arei.Arei) {
 			// Do element-wise multiplication of derivZ and propgated error
 			layer.CgActivations, _ = arei.Multi(rightLayer.CgActivations.Dot(rightLayer.Weights.T()), derivZ)
 		}
-		// Step 2 cost gradients for weights and biases
+		// Step 2 cost gradients for cost function in respect to weights and biases
 		layer.CgWeights = leftLayer.Activations.T().Dot(layer.CgActivations)
 		layer.CgBiases = arei.RowWiseSum(layer.CgActivations)
+	}
+}
+
+func (nn *NeuralNet) updateParams() {
+	// Init number of layers
+	numLayers := len(nn.LayerMap)
+
+	// Loop through each layer, exclude input layer
+	for i := 1; i < numLayers; i++ {
+		layer := nn.LayerMap[i]
+
+		// Get cost gradients scaled by step size
+		weightStep := arei.MultiT(layer.CgWeights, nn.LearningRate)
+		biasStep := arei.MultiT(layer.CgBiases, nn.LearningRate)
+
+		// Subtract step from weight and bias to get updated weights and biases
+		layer.Weights, _ = arei.Sub(layer.Weights, weightStep)
+		layer.Biases, _ = arei.Sub(layer.Biases, biasStep)
+	}
+}
+
+func (nn *NeuralNet) Fit(X, y *arei.Arei) {
+
+	// Loop through epochs
+	for i := range nn.Epochs {
+		// Msg to confirm epoch has started
+		log.Println("Epoch", i, "of", nn.Epochs, "Start")
+
+		// Feed input data as the activation for layer 0
+		nn.LayerMap[0].Activations = X // Shape shold be m x n, or the number of features x number of samples
+		// Perform forward pass
+		nn.forwardProp()
+		// Perform backward pass, Should contain ground truth y
+		nn.backwardProp(y)
+		// Update parameters after calculating the cost gradient of error in respect to each parameter
+		nn.updateParams()
+		// Msg to confirm epoch has ended
+		log.Println("Epoch", i, "of", nn.Epochs, "End")
+
 	}
 }

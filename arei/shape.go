@@ -3,6 +3,7 @@ package arei
 import (
 	"errors"
 	"fmt"
+	"math/rand"
 )
 
 // Functions to create special kind of matrixes
@@ -153,6 +154,25 @@ func Zeros(shape []int) (*Arei, error) {
 
 	zeroData := make([]float64, size)
 	return &Arei{Shape: shape, Data: zeroData}, nil
+}
+
+func RandArei(shape []int, seed int64, bounds []float64) *Arei {
+	// Init flat map for data
+	randSequence := make([]float64, shape[0])
+	// Init random source with seed
+	source := rand.NewSource(seed)
+	r := rand.New(source)
+	// Unpack lower and upper bounds
+	lower, upper := bounds[0], bounds[1]
+	for i := 0; i < shape[0]; i++ {
+		// Add random float between lower and upper bounds to data map
+		randSequence[i] = lower + r.Float64()*(upper-lower) // Scale range
+	}
+
+	return &Arei{
+		Shape: shape,
+		Data:  randSequence,
+	}
 }
 
 // FibMatrix returns the fibonacci matrix at a given n

@@ -315,3 +315,27 @@ func SoftMax(a *Arei, direction int) *Arei {
 
 	return softMaxArei
 }
+
+// Clip takes an arei and lower and upper bound values, then forces each element in the arei to conform to these bounds.
+func Clip(a *Arei, lowerBound, upperBound float64) *Arei {
+	// Create copy of a as to not impact the original
+	b := a.Copy()
+	// Loop through each row
+	for i := range b.Shape[0] {
+		// Loop through each column
+		for j := range b.Shape[1] {
+			// Grab element
+			element, _ := b.Index(i, j)
+
+			// If element is less than lower bound, set index to lower bound value
+			if element < lowerBound {
+				b.SetIndex(lowerBound, i, j)
+			} else if element > upperBound {
+				// Else if the element is greater than upper bound, clip to upper bound value
+				b.SetIndex(upperBound, i, j)
+			}
+		}
+	}
+	// Return modified arei
+	return b
+}
