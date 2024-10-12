@@ -133,13 +133,13 @@ func Test_5() {
 
 	newDim := []int{1, 9}
 	// Try to catch error. Will fail if all elements can be redistruted to new form.
-	err := A.Reshape(newDim)
+	B, err := A.Reshape(newDim)
 	if err != nil {
 		log.Println(err)
 	} else {
 		A.Reshape(newDim)
 	}
-	log.Println("New A:", A)
+	log.Println("New A:", B)
 }
 
 func Test_6() {
@@ -480,4 +480,18 @@ func Test_16() {
 	cgBias := RowWiseSum(weights)
 
 	cgBias.Frame()
+}
+
+func Test_17() {
+	// Test unique function
+
+	weightData := [][]float64{
+		{0.2, 0.3},
+		{0.2, 0.5},
+		{0.12, 0.3},
+	}
+	weights, _ := NewArei(weightData)
+	weights.Frame()
+	uniqueWeights := Unique(weights)
+	uniqueWeights.Frame()
 }

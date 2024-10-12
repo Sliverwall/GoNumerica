@@ -130,18 +130,19 @@ func (a *Arei) SameShape(other *Arei) bool {
 }
 
 // Reshape changes the Shape of the Arei, keeping the Data intact.
-func (a *Arei) Reshape(newShape []int) error {
+func (a *Arei) Reshape(newShape []int) (*Arei, error) {
+	b := a.Copy()
 	size := 1
 	for _, dim := range newShape {
 		size *= dim
 	}
 
 	if size != len(a.Data) {
-		return errors.New("new Shape must have the same number of elements as the original")
+		return nil, errors.New("new Shape must have the same number of elements as the original")
 	}
 
-	a.Shape = newShape
-	return nil
+	b.Shape = newShape
+	return b, nil
 }
 
 // Transpose takes each row in the Arei and repositions it as a column

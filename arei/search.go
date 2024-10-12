@@ -240,3 +240,38 @@ func RemoveColumn(a *Arei, colIndex int) (*Arei, error) {
 		Data:  newData,
 	}, nil
 }
+
+// Unique takes an arei then returns an arei with all unique rows
+func Unique(a *Arei) *Arei {
+
+	rows, cols := a.Shape[0], a.Shape[1]
+	// Turn data back into proper shape
+	data := make([][]float64, rows)
+	for i := range data {
+		data[i] = make([]float64, cols)
+	}
+
+	for i := range rows {
+		for j := range cols {
+			data[i][j], _ = a.Index(i, j)
+		}
+	}
+	uniqueMap := make(map[string]struct{}) // Map to track unique rows
+	var uniqueData [][]float64             // Slice to store unique rows
+
+	for _, row := range data {
+		// Convert the row to a string representation for the map key
+		rowKey := fmt.Sprint(row)
+
+		// Check if the row is already in the map
+		if _, exists := uniqueMap[rowKey]; !exists {
+			// If not, add the row to the map and the unique data slice
+			uniqueMap[rowKey] = struct{}{}
+			uniqueData = append(uniqueData, row)
+		}
+	}
+
+	uniqueArei, _ := NewArei(uniqueData)
+	return uniqueArei
+
+}
