@@ -1,7 +1,7 @@
 package main
 
 import (
-	"GoNumerica/arei"
+	"GoNumerica/numtheory"
 	"log"
 )
 
@@ -29,5 +29,5 @@ func main() {
 	// log.Println("Input Data:")
 	// input.Frame()
 
-	arei.Test_17()
+	numtheory.Test_2()
 }

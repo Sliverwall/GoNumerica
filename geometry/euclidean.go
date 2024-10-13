@@ -7,8 +7,7 @@ import (
 
 // Module for Eculidean geomtric functions
 
-// Hypotenuse calculates the hypotenuse of a right triangle
-// given a vector x
+// Hypotenuse calculates the hypotenuse of a right triangle. This can also be used for euclidean distance.
 func Hypotenuse[T interfaces.Num](x ...T) float64 {
 	// Sqaure each scalar to get the sum of the right handside
 	// c^2 = i -> n, Sum(x[i]*x[i])
