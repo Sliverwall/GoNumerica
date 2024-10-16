@@ -13,7 +13,7 @@ func IsPrime(x int) bool {
 	}
 	threshold := int(math.Floor(math.Sqrt(float64(x))))
 
-	// Skip 1
+	// Check if each number below the threshold divides into x
 	for i := 2; i < threshold; i++ {
 		if x%i == 0 {
 			return false
