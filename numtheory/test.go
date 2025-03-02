@@ -31,6 +31,6 @@ func Test_2() {
 
 	log.Println(primes)
 
-	n := 4375643826464326717
+	n := 9742
 	log.Println(n, "Is Prime:", IsPrime(n))
 }
